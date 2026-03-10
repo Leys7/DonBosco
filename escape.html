@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape from Valdocco</title>
+    <style>
+        :root {
+            --vintage-bg: #2c1810;
+            --wood: #5d4037;
+            --gold: #ffc107;
+            --paper: #f5f5dc;
+        }
+
+        body {
+            background-color: var(--vintage-bg);
+            color: var(--paper);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #game-box {
+            background: var(--wood);
+            border: 8px solid #3e2723;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            border-radius: 10px;
+        }
+
+        .screen { display: none; text-align: center; }
+        .active { display: block; }
+
+        h1 { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; }
+        
+        input {
+            padding: 10px;
+            font-size: 1.2rem;
+            width: 80%;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+        }
+
+        .btn {
+            background: var(--gold);
+            color: var(--vintage-bg);
+            padding: 15px 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        .btn:hover { background: #e6af06; }
+
+        .hint { font-size: 0.8rem; font-style: italic; margin-top: 15px; opacity: 0.8; }
+        .feedback { color: #ff5252; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="game-box">
+    <div id="s-intro" class="screen active">
+        <h1>Fuga da Valdocco</h1>
+        <p>Sei nel primo laboratorio di Don Bosco. La porta è chiusa a chiave. Per uscire e andare in cortile, devi dimostrare di conoscere gli attrezzi del mestiere e la nostra storia.</p>
+        <button class="btn" onclick="next('s-1')">Inizia la sfida</button>
+    </div>
+
+    <div id="s-1" class="screen">
+        <h2>🔒 Enigma 1: La Data Fondamentale</h2>
+        <p>In quale anno Don Bosco fece il famoso "Sogno dei 9 anni"?</p>
+        <input type="number" id="ans1" placeholder="AAAA">
+        <button class="btn" onclick="check1()">Sblocca</button>
+        <p id="f1" class="feedback"></p>
+        <p class="hint">Suggerimento: Giovanni era nato nel 1815...</p>
+    </div>
+
+    <div id="s-2" class="screen">
+        <h2>🔧 Enigma 2: Gli Attrezzi</h2>
+        <p>Don Bosco ha imparato molti mestieri. Quale di questi NON era tra i suoi preferiti? <br><br> 
+           A) Sarto | B) Fabbro | C) Astronauta</p>
+        <input type="text" id="ans2" placeholder="Scrivi A, B o C">
+        <button class="btn" onclick="check2()">Sblocca</button>
+        <p id="f2" class="feedback"></p>
+    </div>
+
+    <div id="s-win" class="screen">
+        <h1>LIBERO! 🕊️</h1>
+        <p>Hai risolto gli enigmi e dimostrato di essere un vero allievo del CNOS-FAP.</p>
+        <p>La chiave gira nella serratura... Ci vediamo in cortile!</p>
+        <button class="btn" onclick="location.reload()">Gioca di nuovo</button>
+    </div>
+</div>
+
+<script>
+    function next(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function check1() {
+        const val = document.getElementById('ans1').value;
+        if(val == "1824") {
+            next('s-2');
+        } else {
+            document.getElementById('f1').innerText = "Codice errato! Riprova.";
+        }
+    }
+
+    function check2() {
+        const val = document.getElementById('ans2').value.toUpperCase();
+        if(val == "C") {
+            next('s-win');
+        } else {
+            document.getElementById('f2').innerText = "Sbagliato. Don Bosco amava i laboratori manuali!";
+        }
+    }
+</script>
+
+</body>
+</html>

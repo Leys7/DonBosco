@@ -37,4 +37,115 @@
 
         .modal { 
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; padding: 30px; border-radius: 20px; box-shadow: 0 0 50px rgba(0,0,0,0.3
+           background: white; color: #1e293b; padding: 30px; border-radius: 20px; width: 80%; max-width: 400px; pointer-events: auto; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        .win-title { color: #059669; font-size: 24px; margin-bottom: 10px; }
+        button { padding: 12px 25px; background: #38bdf8; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <div class="msg">Livello Costruzione: <span id="score">0</span> / 10</div>
+        <div id="label" class="msg">TOCCA PER COSTRUIRE</div>
+    </div>
+
+    <div id="win-modal" class="modal">
+        <h2 class="win-title">🏰 MISSIONE COMPIUTA!</h2>
+        <p>Hai posato l'ultimo mattone. La Basilica è completa! Sei un <strong>Mastro Costruttore di Valdocco</strong>.</p>
+        <button onclick="resetGame()">Gioca ancora</button>
+    </div>
+
+    <div id="lose-modal" class="modal">
+        <h2 style="color: #dc2626;">COSTRUZIONE CROLLATA!</h2>
+        <p>La struttura non era abbastanza solida. Riprova a bilanciare i valori!</p>
+        <button onclick="resetGame()">Ricomincia</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreEl = document.getElementById("score");
+    const labelEl = document.getElementById("label");
+    const WIN_SCORE = 10; // Obiettivo finale
+
+    const pillars = ["RAGIONE", "RELIGIONE", "AMOREVOLEZZA", "PANE", "LAVORO", "STUDIO", "CORTILE", "CASA", "CHIESA", "BASILICA"];
+
+    let width, height, boxHeight, stack, currentBox, mode, speed;
+
+    function init() {
+        canvas.width = window.innerWidth > 500 ? 400 : window.innerWidth;
+        canvas.height = window.innerHeight;
+        width = canvas.width;
+        height = canvas.height;
+        boxHeight = 45;
+        resetGame();
+    }
+
+    function resetGame() {
+        document.getElementById('win-modal').style.display = "none";
+        document.getElementById('lose-modal').style.display = "none";
+        stack = [{ x: width/4, w: width/2, color: '#334155' }]; 
+        currentBox = { x: 0, w: width/2, dir: 1 };
+        mode = 'PLAYING';
+        speed = 2.5;
+        scoreEl.innerText = 0;
+        labelEl.innerText = "CLICCA PER IL PRIMO LIVELLO";
+        animate();
+    }
+
+    function animate() {
+        if (mode !== 'PLAYING') return;
+        ctx.clearRect(0, 0, width, height);
+        
+        stack.forEach((box, i) => {
+            ctx.fillStyle = box.color;
+            ctx.fillRect(box.x, height - (i + 1) * boxHeight, box.w, boxHeight);
+            ctx.strokeStyle = "rgba(255,255,255,0.3)";
+            ctx.strokeRect(box.x, height - (i + 1) * boxHeight, box.w, boxHeight);
+        });
+
+        currentBox.x += currentBox.dir * speed;
+        if (currentBox.x + currentBox.w > width || currentBox.x < 0) currentBox.dir *= -1;
+        
+        ctx.fillStyle = "#fbbf24";
+        ctx.fillRect(currentBox.x, height - (stack.length + 1) * boxHeight, currentBox.w, boxHeight);
+        requestAnimationFrame(animate);
+    }
+
+    function placeBox() {
+        if (mode !== 'PLAYING') return;
+
+        const lastBox = stack[stack.length - 1];
+        const diff = currentBox.x - lastBox.x;
+
+        if (Math.abs(diff) >= currentBox.w) {
+            mode = 'GAMEOVER';
+            document.getElementById('lose-modal').style.display = "block";
+            return;
+        }
+
+        if (diff > 0) { currentBox.w -= diff; } 
+        else { currentBox.w += diff; currentBox.x = lastBox.x; }
+
+        stack.push({...currentBox, color: `hsl(${180 + stack.length * 15}, 70%, 50%)`});
+        scoreEl.innerText = stack.length - 1;
+        labelEl.innerText = pillars[(stack.length - 2) % pillars.length];
+        
+        if (stack.length - 1 === WIN_SCORE) {
+            mode = 'WIN';
+            document.getElementById('win-modal').style.display = "block";
+        } else {
+            speed += 0.4;
+            currentBox.x = 0;
+        }
+    }
+
+    window.onmousedown = placeBox;
+    window.ontouchstart = (e) => { e.preventDefault(); placeBox(); };
+    window.onresize = init;
+    init();
+</script>
+</body>
+</html>

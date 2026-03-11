@@ -4,148 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valdocco Manager - CNOS-FAP</title>
-    <style>
-        :root { --bg: #f0f4f8; --primary: #2563eb; --accent: #f59e0b; --success: #10b981; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        
-        #header { background: white; padding: 15px; display: flex; justify-content: space-around; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .stat { text-align: center; }
-        .stat-val { display: block; font-weight: bold; font-size: 1.2rem; color: var(--primary); }
-
-        #city-grid { 
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; 
-            padding: 20px; flex-grow: 1; max-width: 500px; margin: 0 auto;
-        }
-
-        .plot { 
-            background: #e2e8f0; border: 2px dashed #cbd5e1; border-radius: 12px;
-            aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; cursor: pointer; transition: all 0.3s; font-size: 0.8rem; text-align: center;
-        }
-
-        .plot:hover { background: #cbd5e1; }
-        .plot.built { background: white; border-style: solid; border-color: var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-
-        #controls { background: white; padding: 20px; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
-        .menu-title { font-weight: bold; margin-bottom: 10px; display: block; }
-        .build-btn { 
-            width: 100%; padding: 12px; margin-bottom: 8px; border: none; border-radius: 8px; 
-            background: var(--bg); color: #475569; cursor: pointer; text-align: left; font-size: 0.9rem;
-        }
-        .build-btn:hover { background: #e2e8f0; }
-        .build-btn.active { background: var(--primary); color: white; }
-
-        .modal { 
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-           background: white; color: #1e293b; padding: 30px; border-radius: 20px; width: 80%; max-width: 400px; pointer-events: auto; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
-        .win-title { color: #059669; font-size: 24px; margin-bottom: 10px; }
-        button { padding: 12px 25px; background: #38bdf8; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 15px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="ui">
-        <div class="msg">Livello Costruzione: <span id="score">0</span> / 10</div>
-        <div id="label" class="msg">TOCCA PER COSTRUIRE</div>
-    </div>
+<div id="header">
+    <div class="stat">💰 RISORSE<span id="res" class="stat-val">100</span></div>
+    <div class="stat">✨ SPERANZA<span id="hope" class="stat-val">0</span></div>
+    <div class="stat">👨‍🎓 RAGAZZI<span id="kids" class="stat-val">0</span></div>
+</div>
 
-    <div id="win-modal" class="modal">
-        <h2 class="win-title">🏰 MISSIONE COMPIUTA!</h2>
-        <p>Hai posato l'ultimo mattone. La Basilica è completa! Sei un <strong>Mastro Costruttore di Valdocco</strong>.</p>
-        <button onclick="resetGame()">Gioca ancora</button>
-    </div>
+<div id="city-grid">
+    <div class="plot" onclick="selectPlot(0)">Terreno Libero</div>
+    <div class="plot" onclick="selectPlot(1)">Terreno Libero</div>
+    <div class="plot" onclick="selectPlot(2)">Terreno Libero</div>
+    <div class="plot" onclick="selectPlot(3)">Terreno Libero</div>
+    <div class="plot" onclick="selectPlot(4)">Terreno Libero</div>
+    <div class="plot" onclick="selectPlot(5)">Terreno Libero</div>
+    <div class="plot" onclick="selectPlot(6)">Terreno Libero</div>
+    <div class="plot" onclick="selectPlot(7)">Terreno Libero</div>
+    <div class="plot" onclick="selectPlot(8)">Terreno Libero</div>
+</div>
 
-    <div id="lose-modal" class="modal">
-        <h2 style="color: #dc2626;">COSTRUZIONE CROLLATA!</h2>
-        <p>La struttura non era abbastanza solida. Riprova a bilanciare i valori!</p>
-        <button onclick="resetGame()">Ricomincia</button>
-    </div>
+<div id="controls">
+    <span class="menu-title">Cosa vuoi costruire?</span>
+    <button class="build-btn" onclick="build('lab')">🛠️ Laboratorio (-30 Risorse)</button>
+    <button class="build-btn" onclick="build('ora')">⚽ Oratorio (-20 Risorse)</button>
+    <button class="build-btn" onclick="build('dorm')">🛏️ Alloggi (-40 Risorse)</button>
+</div>
 
-    <canvas id="gameCanvas"></canvas>
+<div id="win-modal" class="modal">
+    <h2>Valdocco è fiorita! 🏰</h2>
+    <p>Hai creato una comunità incredibile.</p>
+    <button onclick="location.reload()">Ricomincia</button>
+</div>
 
-<script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
-    const scoreEl = document.getElementById("score");
-    const labelEl = document.getElementById("label");
-    const WIN_SCORE = 10; // Obiettivo finale
-
-    const pillars = ["RAGIONE", "RELIGIONE", "AMOREVOLEZZA", "PANE", "LAVORO", "STUDIO", "CORTILE", "CASA", "CHIESA", "BASILICA"];
-
-    let width, height, boxHeight, stack, currentBox, mode, speed;
-
-    function init() {
-        canvas.width = window.innerWidth > 500 ? 400 : window.innerWidth;
-        canvas.height = window.innerHeight;
-        width = canvas.width;
-        height = canvas.height;
-        boxHeight = 45;
-        resetGame();
-    }
-
-    function resetGame() {
-        document.getElementById('win-modal').style.display = "none";
-        document.getElementById('lose-modal').style.display = "none";
-        stack = [{ x: width/4, w: width/2, color: '#334155' }]; 
-        currentBox = { x: 0, w: width/2, dir: 1 };
-        mode = 'PLAYING';
-        speed = 2.5;
-        scoreEl.innerText = 0;
-        labelEl.innerText = "CLICCA PER IL PRIMO LIVELLO";
-        animate();
-    }
-
-    function animate() {
-        if (mode !== 'PLAYING') return;
-        ctx.clearRect(0, 0, width, height);
-        
-        stack.forEach((box, i) => {
-            ctx.fillStyle = box.color;
-            ctx.fillRect(box.x, height - (i + 1) * boxHeight, box.w, boxHeight);
-            ctx.strokeStyle = "rgba(255,255,255,0.3)";
-            ctx.strokeRect(box.x, height - (i + 1) * boxHeight, box.w, boxHeight);
-        });
-
-        currentBox.x += currentBox.dir * speed;
-        if (currentBox.x + currentBox.w > width || currentBox.x < 0) currentBox.dir *= -1;
-        
-        ctx.fillStyle = "#fbbf24";
-        ctx.fillRect(currentBox.x, height - (stack.length + 1) * boxHeight, currentBox.w, boxHeight);
-        requestAnimationFrame(animate);
-    }
-
-    function placeBox() {
-        if (mode !== 'PLAYING') return;
-
-        const lastBox = stack[stack.length - 1];
-        const diff = currentBox.x - lastBox.x;
-
-        if (Math.abs(diff) >= currentBox.w) {
-            mode = 'GAMEOVER';
-            document.getElementById('lose-modal').style.display = "block";
-            return;
-        }
-
-        if (diff > 0) { currentBox.w -= diff; } 
-        else { currentBox.w += diff; currentBox.x = lastBox.x; }
-
-        stack.push({...currentBox, color: `hsl(${180 + stack.length * 15}, 70%, 50%)`});
-        scoreEl.innerText = stack.length - 1;
-        labelEl.innerText = pillars[(stack.length - 2) % pillars.length];
-        
-        if (stack.length - 1 === WIN_SCORE) {
-            mode = 'WIN';
-            document.getElementById('win-modal').style.display = "block";
-        } else {
-            speed += 0.4;
-            currentBox.x = 0;
-        }
-    }
-
-    window.onmousedown = placeBox;
-    window.ontouchstart = (e) => { e.preventDefault(); placeBox(); };
-    window.onresize = init;
-    init();
-</script>
+<script src="script.js"></script>
 </body>
 </html>

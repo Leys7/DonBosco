@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dreamer's Run - CNOS-FAP</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #87CEEB; font-family: sans-serif; }
+        canvas { display: block; background: linear-gradient(#87CEEB, #e0f2fe); }
+        #ui { position: absolute; top: 20px; left: 20px; pointer-events: none; }
+        .stat { font-size: 24px; font-weight: bold; color: #1e293b; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 10px; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 80%; max-width: 400px;}
+        button { padding: 15px 30px; background: #0284c7; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <div class="stat">Giovani salvati: <span id="score">0</span> / 20</div>
+    </div>
+
+    <div id="msg-modal" class="modal">
+        <h2 id="modal-title">MISSIONE COMPIUTA!</h2>
+        <p id="modal-text">Hai portato 20 ragazzi all'Oratorio. Il sogno continua!</p>
+        <button onclick="location.reload()">Riprova</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreEl = document.getElementById("score");
+    const modal = document.getElementById("msg-modal");
+
+    // Parametri Gioco
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let score = 0;
+    let gameActive = true;
+    const gravity = 0.6;
+    
+    const player = {
+        x: 50, y: canvas.height - 150, w: 40, h: 60,
+        dy: 0, jumpForce: -15, grounded: false, color: "#1e293b"
+    };
+
+    let obstacles = [];
+    let items = [];
+    let frame = 0;
+
+    function spawnStuff() {
+        if (frame % 100 === 0) {
+            obstacles.push({ x: canvas.width, y: canvas.height - 100, w: 30, h: 50, color: "#dc2626" });
+        }
+        if (frame % 150 === 0) {
+            items.push({ x: canvas.width, y: canvas.height - 150 - Math.random() * 100, w: 20, h: 20, color: "#fbbf24" });
+        }
+    }
+
+    function update() {
+        if (!gameActive) return;
+
+        // Gravità e Salto
+        player.dy += gravity;
+        player.y += player.dy;
+
+        if (player.y + player.h > canvas.height - 50) {
+            player.y = canvas.height - 50 - player.h;
+            player.dy = 0;
+            player.grounded = true;
+        }
+
+        // Gestione Ostacoli
+        obstacles.forEach((obs, i) => {
+            obs.x -= 5;
+            // Collisione
+            if (player.x < obs.x + obs.w && player.x + player.w > obs.x && player.y < obs.y + obs.h && player.y + player.h > obs.y) {
+                gameOver("Inciampato!", "Le difficoltà non ti fermano, riprova!");
+            }
+            if (obs.x + obs.w < 0) obstacles.splice(i, 1);
+        });
+
+        // Gestione Items (Giovani)
+        items.forEach((item, i) => {
+            item.x -= 5;
+            if (player.x < item.x + item.w && player.x + player.w > item.x && player.y < item.y + item.h && player.y + player.h > item.y) {
+                items.splice(i, 1);
+                score++;
+                scoreEl.innerText = score;
+                if (score >= 20) gameOver("VITTORIA!", "Hai radunato 20 giovani a Valdocco. Il sogno di Don Bosco vive in te!");
+            }
+            if (item.x + item.w < 0) items.splice(i, 1);
+        });
+
+        spawnStuff();
+        frame++;
+        draw();
+        requestAnimationFrame(update);
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Terreno
+        ctx.fillStyle = "#166534";
+        ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
+
+        // Personaggio (Rappresentato da un rettangolo stilizzato)
+        ctx.fillStyle = player.color;
+        ctx.fillRect(player.x, player.y, player.w, player.h);
+        // Testa
+        ctx.beginPath();
+        ctx.arc(player.x + 20, player.y - 10, 15, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Ostacoli (Mattoni rossi / Debiti)
+        obstacles.forEach(obs => {
+            ctx.fillStyle = obs.color;
+            ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+        });
+
+        // Items (Stelle/Giovani)
+        items.forEach(item => {
+            ctx.fillStyle = item.color;
+            ctx.beginPath();
+            ctx.arc(item.x + 10, item.y + 10, 10, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    function gameOver(title, text) {
+        gameActive = false;
+        document.getElementById("modal-title").innerText = title;
+        document.getElementById("modal-text").innerText = text;
+        modal.style.display = "block";
+    }
+
+    window.onclick = () => {
+        if (player.grounded && gameActive) {
+            player.dy = player.jumpForce;
+            player.grounded = false;
+        }
+    };
+
+    update();
+</script>
+</body>
+</html>

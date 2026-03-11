@@ -3,42 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valdocco Manager - CNOS-FAP</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Valdocco Manager: Missione 100</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --primary: #38bdf8; --win: #10b981; }
+        body { font-family: sans-serif; background: var(--bg); color: white; margin: 0; text-align: center; }
+        
+        #header { background: var(--card); padding: 20px; border-bottom: 2px solid var(--primary); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 400px; margin: 0 auto; }
+        .stat-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; }
+        .val { display: block; font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+
+        #grid { 
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; 
+            padding: 20px; max-width: 400px; margin: 0 auto; 
+        }
+        .plot { 
+            aspect-ratio: 1; background: var(--card); border: 1px solid #334155; 
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 0.7rem; transition: 0.2s;
+        }
+        .plot:hover { border-color: var(--primary); }
+        .plot.built { background: white; color: #1e293b; border: none; font-weight: bold; }
+
+        .controls { padding: 20px; display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
+        button { 
+            padding: 12px; border: none; border-radius: 8px; background: #334155; 
+            color: white; cursor: pointer; font-weight: bold; text-align: left;
+        }
+        button:hover { background: #475569; }
+        button.active { background: var(--primary); color: #0f172a; }
+
+        /* Schermata Vittoria */
+        #win-screen { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: var(--win); z-index: 100; justify-content: center; align-items: center; flex-direction: column;
+        }
+    </style>
 </head>
 <body>
 
-<div id="header">
-    <div class="stat">💰 RISORSE<span id="res" class="stat-val">100</span></div>
-    <div class="stat">✨ SPERANZA<span id="hope" class="stat-val">0</span></div>
-    <div class="stat">👨‍🎓 RAGAZZI<span id="kids" class="stat-val">0</span></div>
-</div>
+    <div id="win-screen">
+        <h1>🏆 MISSIONE COMPIUTA!</h1>
+        <p>Hai accolto 100 ragazzi a Valdocco!</p>
+        <button onclick="location.reload()" style="background: white; color: var(--win); text-align: center;">GIOCA ANCORA</button>
+    </div>
 
-<div id="city-grid">
-    <div class="plot" onclick="selectPlot(0)">Terreno Libero</div>
-    <div class="plot" onclick="selectPlot(1)">Terreno Libero</div>
-    <div class="plot" onclick="selectPlot(2)">Terreno Libero</div>
-    <div class="plot" onclick="selectPlot(3)">Terreno Libero</div>
-    <div class="plot" onclick="selectPlot(4)">Terreno Libero</div>
-    <div class="plot" onclick="selectPlot(5)">Terreno Libero</div>
-    <div class="plot" onclick="selectPlot(6)">Terreno Libero</div>
-    <div class="plot" onclick="selectPlot(7)">Terreno Libero</div>
-    <div class="plot" onclick="selectPlot(8)">Terreno Libero</div>
-</div>
+    <div id="header">
+        <h2>MISSIONE: 100 RAGAZZI</h2>
+        <div class="stats-grid">
+            <div class="stat-box">💰 FONDI<span id="res" class="val">100</span></div>
+            <div class="stat-box">👨‍🎓 RAGAZZI<span id="kids" class="val">0 / 100</span></div>
+        </div>
+    </div>
 
-<div id="controls">
-    <span class="menu-title">Cosa vuoi costruire?</span>
-    <button class="build-btn" onclick="build('lab')">🛠️ Laboratorio (-30 Risorse)</button>
-    <button class="build-btn" onclick="build('ora')">⚽ Oratorio (-20 Risorse)</button>
-    <button class="build-btn" onclick="build('dorm')">🛏️ Alloggi (-40 Risorse)</button>
-</div>
+    <div id="grid">
+        </div>
+    <div class="controls">
+        <p>1. Seleziona un terreno vuoto<br>2. Scegli cosa costruire:</p>
+        <button onclick="build('lab')">🛠️ LAB. PROFESSIONALE (-30💰 | +15 ragazzi)</button>
+        <button onclick="build('dorm')">🛏️ ALLOGGI (-50💰 | +30 ragazzi)</button>
+        <button onclick="build('provvidenza')">🙏 CHIEDI AIUTO (Gratis | +20💰)</button>
+    </div>
 
-<div id="win-modal" class="modal">
-    <h2>Valdocco è fiorita! 🏰</h2>
-    <p>Hai creato una comunità incredibile.</p>
-    <button onclick="location.reload()">Ricomincia</button>
-</div>
+    <script>
+        let resources = 100;
+        let kids = 0;
+        let selectedIndex = -1;
+        const totalPlots = 9;
 
-<script src="script.js"></script>
+        // Inizializza griglia
+        const grid = document.getElementById('grid');
+        for(let i=0; i<totalPlots; i++) {
+            let p = document.createElement('div');
+            p.className = 'plot';
+            p.innerText = "VUOTO";
+            p.onclick = () => {
+                document.querySelectorAll('.plot').forEach(el => el.style.borderColor = "#334155");
+                p.style.borderColor = "#38bdf8";
+                selectedIndex = i;
+            };
+            grid.appendChild(p);
+        }
+
+        function build(type) {
+            if (type === 'provvidenza') {
+                resources += 20;
+                alert("La Provvidenza è arrivata! +20 monete.");
+                update();
+                return;
+            }
+
+            if (selectedIndex === -1) { alert("Scegli un terreno prima!"); return; }
+            
+            const plots = document.querySelectorAll('.plot');
+            if (plots[selectedIndex].classList.contains('built')) { alert("Qui c'è già qualcosa!"); return; }
+
+            let cost = type === 'lab' ? 30 : 50;
+            let gain = type === 'lab' ? 15 : 30;
+            let icon = type === 'lab' ? "🛠️" : "🛏️";
+
+            if (resources >= cost) {
+                resources -= cost;
+                kids += gain;
+                plots[selectedIndex].classList.add('built');
+                plots[selectedIndex].innerHTML = icon + "<br>" + (type === 'lab' ? "LAB" : "CASA");
+                selectedIndex = -1;
+                update();
+                if (kids >= 100) document.getElementById('win-screen').style.display = 'flex';
+            } else {
+                alert("Soldi finiti! Usa il tasto della Provvidenza.");
+            }
+        }
+
+        function update() {
+            document.getElementById('res').innerText = resources;
+            document.getElementById('kids').innerText = kids + " / 100";
+        }
+    </script>
 </body>
 </html>

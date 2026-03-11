@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build the Dream - CNOS-FAP</title>
+    <style>
+        body { margin: 0; background: #111; color: white; font-family: sans-serif; text-align: center; overflow: hidden; }
+        canvas { background: #222; display: block; margin: 0 auto; touch-action: none; }
+        #ui { position: absolute; top: 20px; width: 100%; pointer-events: none; }
+        .msg { font-size: 24px; font-weight: bold; text-shadow: 2px 2px #000; }
+        #btn-restart { pointer-events: auto; padding: 10px 20px; background: #ffc107; border: none; cursor: pointer; display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <div class="msg">Piani costruiti: <span id="score">0</span></div>
+        <div id="label" class="msg" style="color: #ffc107; font-size: 18px; margin-top: 10px;"></div>
+        <button id="btn-restart" onclick="resetGame()">Ricomincia</button>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreEl = document.getElementById("score");
+    const labelEl = document.getElementById("label");
+    const restartBtn = document.getElementById("btn-restart");
+
+    // Valori del Sistema Preventivo
+    const pillars = ["RAGIONE", "RELIGIONE", "AMOREVOLEZZA", "PANE", "LAVORO", "STUDIO", "CORTILE", "CASA", "CHIESA"];
+
+    let width, height, boxHeight, stack, currentBox, mode, speed;
+
+    function init() {
+        canvas.width = window.innerWidth > 500 ? 400 : window.innerWidth;
+        canvas.height = window.innerHeight;
+        width = canvas.width;
+        height = canvas.height;
+        boxHeight = 40;
+        resetGame();
+    }
+
+    function resetGame() {
+        stack = [{ x: width/4, w: width/2, color: '#007bff' }]; // Base
+        currentBox = { x: 0, w: width/2, dir: 1, color: '#38bdf8' };
+        mode = 'PLAYING';
+        speed = 3;
+        scoreEl.innerText = 0;
+        labelEl.innerText = "CLICCA PER POSARE IL MATTONE";
+        restartBtn.style.display = "none";
+        animate();
+    }
+
+    function animate() {
+        if (mode !== 'PLAYING') return;
+
+        ctx.clearRect(0, 0, width, height);
+        
+        // Disegna la torre esistente
+        stack.forEach((box, i) => {
+            ctx.fillStyle = box.color;
+            ctx.fillRect(box.x, height - (i + 1) * boxHeight, box.w, box.Height || boxHeight);
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(box.x, height - (i + 1) * boxHeight, box.w, box.Height || boxHeight);
+        });
+
+        // Muovi e disegna il blocco corrente
+        currentBox.x += currentBox.dir * speed;
+        if (currentBox.x + currentBox.w > width || currentBox.x < 0) currentBox.dir *= -1;
+        
+        ctx.fillStyle = "#ffc107";
+        ctx.fillRect(currentBox.x, height - (stack.length + 1) * boxHeight, currentBox.w, boxHeight);
+
+        requestAnimationFrame(animate);
+    }
+
+    function placeBox() {
+        if (mode !== 'PLAYING') return;
+
+        const lastBox = stack[stack.length - 1];
+        const diff = currentBox.x - lastBox.x;
+
+        if (Math.abs(diff) >= currentBox.w) {
+            mode = 'GAMEOVER';
+            labelEl.innerText = "LA COSTRUZIONE È CROLLATA!";
+            restartBtn.style.display = "inline-block";
+            return;
+        }
+
+        // Taglia il blocco
+        if (diff > 0) {
+            currentBox.w -= diff;
+        } else {
+            currentBox.w += diff;
+            currentBox.x = lastBox.x;
+        }
+
+        stack.push({...currentBox, color: `hsl(${stack.length * 30}, 70%, 50%)`});
+        scoreEl.innerText = stack.length - 1;
+        labelEl.innerText = pillars[(stack.length - 2) % pillars.length];
+        
+        // Aumenta difficoltà
+        speed += 0.3;
+        currentBox.x = 0;
+    }
+
+    window.addEventListener("mousedown", placeBox);
+    window.addEventListener("touchstart", (e) => { e.preventDefault(); placeBox(); });
+    window.onresize = init;
+
+    init();
+</script>
+</body>
+</html>

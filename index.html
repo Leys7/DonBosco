@@ -7,49 +7,122 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Pro:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #c5a059; --parchment: #f2e6d0; }
-        body, html { margin: 0; padding: 0; background-color: #050505; color: var(--parchment); font-family: 'Crimson Pro', serif; }
+        
+        body, html { 
+            margin: 0; padding: 0; 
+            background-color: #050505; 
+            color: var(--parchment); 
+            font-family: 'Crimson Pro', serif;
+            min-height: 100vh;
+        }
 
-        /* SFONDO CHE NON COPRE IL TESTO */
+        /* SFONDO OTTIMIZZATO: POSIZIONATO PER NON COPRIRE IL VISO */
         #hero-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             z-index: -2;
-            background-image: url('https://leys7.github.io/DonBosco/donbosco.jpg');
-            background-size: contain; background-position: center top; background-repeat: no-repeat;
+            background-image: url('donbosco.jpg');
+            background-size: contain; 
+            background-position: center 5%; 
+            background-repeat: no-repeat;
         }
 
+        /* OVERLAY PIU' MORBIDO PER FAR EMERGERE I TESTI */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(5,5,5,0.8) 60%, #050505 100%);
+            background: linear-gradient(to bottom, 
+                rgba(0,0,0,0) 0%, 
+                rgba(0,0,0,0.2) 20%, 
+                rgba(5,5,5,0.85) 60%, 
+                #050505 100%);
             z-index: -1;
         }
 
-        .wrapper { max-width: 900px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .wrapper { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
         
-        .header { text-align: center; margin-top: 40px; margin-bottom: 380px; }
-        h1 { font-family: 'Cinzel'; color: var(--gold); font-size: 3rem; text-shadow: 0 0 20px black; margin: 0; }
+        .header { 
+            text-align: center; 
+            margin-top: 30px; 
+            margin-bottom: 420px; /* Spazio vitale per vedere il volto di Don Bosco */
+        }
 
-        /* BOX GIOCO CON TUTTO IL TESTO */
+        h1 { 
+            font-family: 'Cinzel'; 
+            color: var(--gold); 
+            font-size: clamp(2rem, 8vw, 3.5rem); 
+            text-shadow: 0 0 20px black; 
+            margin: 0; 
+        }
+
+        /* BOX GIOCO CON CONTRASTO ELEVATO */
         .game-box {
-            background: rgba(15, 15, 15, 0.95); border: 1px solid var(--gold);
-            padding: 40px; width: 100%; box-sizing: border-box;
-            box-shadow: 0 0 50px black; text-align: center;
+            background: rgba(15, 15, 15, 0.95); 
+            border: 1px solid var(--gold);
+            padding: 35px; 
+            width: 100%; 
+            max-width: 800px;
+            box-sizing: border-box;
+            box-shadow: 0 0 50px black; 
+            text-align: center;
+            border-radius: 4px;
         }
 
-        .pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 25px 0; }
+        .pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 25px 0; }
+        
         .fragment { 
-            background: var(--parchment); color: #111; padding: 10px 15px; 
-            cursor: grab; font-weight: bold; border: 1px solid var(--gold); 
+            background: var(--parchment); 
+            color: #111; 
+            padding: 10px 15px; 
+            cursor: grab; 
+            font-weight: bold; 
+            border: 1px solid var(--gold);
+            font-size: 0.95rem;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
         }
 
-        .slots { display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap; }
+        .slots { 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            margin: 30px 0; 
+            flex-wrap: wrap; 
+        }
+
         .target { 
-            width: 180px; height: 60px; border: 1px dashed var(--gold); 
-            background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;
+            width: 170px; 
+            height: 60px; 
+            border: 1px dashed var(--gold); 
+            background: rgba(0,0,0,0.5); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: var(--gold);
+            font-size: 0.8rem;
         }
 
         .btn-next {
-            display: none; background: var(--gold); color: black; padding: 15px 40px;
-            font-family: 'Cinzel'; font-weight: bold; border: none; cursor: pointer; margin-top: 20px;
+            display: none; 
+            background: var(--gold); 
+            color: black; 
+            padding: 18px 45px;
+            font-family: 'Cinzel'; 
+            font-weight: bold; 
+            border: none; 
+            cursor: pointer; 
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+
+        .instruction-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -65,9 +138,11 @@
     </header>
 
     <div class="game-box">
-        <h2 style="font-family: 'Cinzel'; color: var(--gold);">L'Eco del Sogno</h2>
-        <p><i>"Benvenuto, cercatore. Per procedere, ricomponi il messaggio che cambiò il mondo."</i></p>
-        <p>Trascina i 4 frammenti del Sogno a nove anni negli slot corretti.</p>
+        <h2 style="font-family: 'Cinzel'; color: var(--gold); margin-top: 0;">L'Eco del Sogno</h2>
+        <div class="instruction-text">
+            "Benvenuto, cercatore. Per procedere, ricomponi il messaggio che cambiò il mondo."<br>
+            <strong>Trascina i 4 frammenti del Sogno a nove anni negli slot corretti.</strong>
+        </div>
         
         <div class="pool" id="pool"></div>
 
@@ -78,13 +153,14 @@
             <div class="target" data-id="4">SLOT IV</div>
         </div>
 
-        <div id="status" style="height: 30px; font-weight: bold;"></div>
+        <div id="status" style="height: 30px; font-weight: bold; color: var(--gold);"></div>
         <button class="btn-next" id="btn-next" onclick="window.location.href='run.html'">SBLOCCA DECADE I</button>
     </div>
 </div>
 
 <script>
-    const cards = [
+    // Database completo a 12 schede
+    const cardsData = [
         { id: "1", t: "Renditi umile," }, { id: "2", t: "forte e robusto:" },
         { id: "3", t: "trasformerai i lupi" }, { id: "4", t: "in agnelli." },
         { id: "x", t: "Domina con timore" }, { id: "x", t: "Usa il potere" },
@@ -94,34 +170,47 @@
     ];
 
     const pool = document.getElementById('pool');
-    cards.sort(() => Math.random() - 0.5).forEach(c => {
+    const status = document.getElementById('status');
+    const btnNext = document.getElementById('btn-next');
+
+    // Mischia e genera le 12 schede
+    cardsData.sort(() => Math.random() - 0.5).forEach(c => {
         const div = document.createElement('div');
-        div.className = 'fragment'; div.draggable = true; div.innerText = c.t;
-        div.dataset.id = c.id; div.id = 'f-' + Math.random();
+        div.className = 'fragment'; 
+        div.draggable = true; 
+        div.innerText = c.t;
+        div.dataset.id = c.id; 
+        div.id = 'f-' + Math.random().toString(36).substr(2, 9);
         div.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
         pool.appendChild(div);
     });
 
+    // Logica Drag & Drop
     document.querySelectorAll('.target, .pool').forEach(zone => {
         zone.addEventListener('dragover', e => e.preventDefault());
         zone.addEventListener('drop', e => {
             e.preventDefault();
             const id = e.dataTransfer.getData('text');
             const el = document.getElementById(id);
-            if (zone.classList.contains('target') && zone.children.length === 0) zone.appendChild(el);
-            else if (zone.id === 'pool') zone.appendChild(el);
-            check();
+            if (zone.classList.contains('target')) {
+                if (zone.children.length === 0) zone.appendChild(el);
+            } else {
+                zone.appendChild(el);
+            }
+            checkResult();
         });
     });
 
-    function check() {
-        const current = Array.from(document.querySelectorAll('.target')).map(t => t.children[0]?.dataset.id);
-        if (JSON.stringify(current) === JSON.stringify(["1", "2", "3", "4"])) {
-            document.getElementById('btn-next').style.display = "inline-block";
-            document.getElementById('status').innerText = "SIGILLO APERTO";
+    function checkResult() {
+        const slots = document.querySelectorAll('.target');
+        const currentIds = Array.from(slots).map(s => s.children[0]?.dataset.id);
+        
+        if (JSON.stringify(currentIds) === JSON.stringify(["1", "2", "3", "4"])) {
+            status.innerText = "IL CODICE È CORRETTO";
+            btnNext.style.display = "inline-block";
         } else {
-            document.getElementById('btn-next').style.display = "none";
-            document.getElementById('status').innerText = current.includes(undefined) ? "" : "ERRORE";
+            btnNext.style.display = "none";
+            status.innerText = currentIds.includes(undefined) ? "" : "L'ORDINE NON È ESATTO";
         }
     }
 </script>

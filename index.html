@@ -3,177 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Workshop Challenge - CNOS-FAP</title>
+    <title>Il Codice del Sogno - L'Eco del Sogno</title>
     <style>
         :root {
-            --primary: #0056b3;
-            --secondary: #ffc107;
-            --danger: #dc3545;
-            --success: #28a745;
-            --dark: #212529;
-            --light: #f8f9fa;
+            --parchment: #f4e4bc;
+            --ink: #2c1e1a;
+            --gold: #d4af37;
+            --mist: rgba(255, 255, 255, 0.8);
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--dark);
-            color: var(--light);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body, html {
             margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Georgia', serif;
+            background-color: #1a1a1a;
+            color: var(--ink);
             overflow: hidden;
         }
 
-        #game-container {
+        /* Sfondo narrativo */
+        .scena-mistica {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenitore Libro/Manoscritto */
+        .manoscritto {
             width: 90%;
-            max-width: 500px;
-            background: #fff;
-            color: #333;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 800px;
+            background: var(--parchment);
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 100px rgba(139, 69, 19, 0.2);
+            position: relative;
+            z-index: 10;
             text-align: center;
+            border: 2px solid var(--gold);
         }
 
-        .stats-container {
+        h1 { font-style: italic; color: #5d4037; }
+        p.istruzioni { font-size: 1.1rem; margin-bottom: 30px; line-height: 1.6; }
+
+        /* Area del Gioco: Drag & Drop */
+        .word-container {
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 1.5rem;
-            background: var(--light);
-            padding: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            min-height: 100px;
+            padding: 20px;
+            border: 1px dashed #8b4513;
             border-radius: 10px;
+            background: rgba(255, 255, 255, 0.3);
         }
 
-        .stat-box { font-size: 0.8rem; font-weight: bold; }
-        .stat-value { 
-            display: block; 
-            font-size: 1.2rem; 
-            color: var(--primary);
+        .word-card {
+            background: var(--ink);
+            color: var(--parchment);
+            padding: 10px 20px;
+            cursor: grab;
+            border-radius: 4px;
+            user-select: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
         }
 
-        #scenario-text {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            min-height: 80px;
-            line-height: 1.4;
-        }
+        .word-card:active { cursor: grabbing; transform: scale(1.1); }
 
-        .btn-container {
+        .drop-zone {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(212, 175, 55, 0.1);
+            border-bottom: 2px solid var(--gold);
+            min-height: 60px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
             gap: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
         }
 
-        button {
-            padding: 15px;
+        /* Effetto Nebbia */
+        #fog-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--mist);
+            backdrop-filter: blur(10px);
+            z-index: 5;
+            pointer-events: none;
+            transition: opacity 2s ease;
+        }
+
+        /* Pulsante di Sblocco */
+        #unlock-btn {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: var(--gold);
             border: none;
-            border-radius: 10px;
-            background: var(--primary);
             color: white;
-            font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.1s, background 0.2s;
+            display: none;
+            animation: pulse 2s infinite;
         }
 
-        button:hover { background: #004494; transform: scale(1.02); }
-        button:active { transform: scale(0.98); }
-
-        /* Effetto per il Game Over */
-        .game-over { color: var(--danger); font-weight: bold; }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
     </style>
 </head>
 <body>
 
-<div id="game-container">
-    <div class="stats-container">
-        <div class="stat-box">COMPETENZA<span id="stat-tech" class="stat-value">50</span></div>
-        <div class="stat-box">ONESTÀ<span id="stat-honesty" class="stat-value">50</span></div>
-        <div class="stat-box">RELAZIONI<span id="stat-rel" class="stat-value">50</span></div>
-    </div>
+<div id="fog-overlay"></div>
 
-    <div id="game-content">
-        <p id="scenario-text">Caricamento avventura...</p>
-        <div class="btn-container" id="choices">
+<div class="scena-mistica">
+    <div class="manoscritto">
+        <h1>L'Eco del Sogno</h1>
+        <p class="istruzioni">
+            "Renditi umile, forte e robusto."<br>
+            Le nubi oscurano il sentiero. Trascina i frammenti del Sogno nell'ordine corretto per rivelare il cammino verso i Becchi.
+        </p>
+
+        <div class="word-container" id="source-words">
+            <div class="word-card" draggable="true" id="w1" data-order="3">Lupi</div>
+            <div class="word-card" draggable="true" id="w2" data-order="1">Non con le percosse</div>
+            <div class="word-card" draggable="true" id="w3" data-order="2">ma con la carità</div>
+            <div class="word-card" draggable="true" id="w4" data-order="4">in Agnelli</div>
+        </div>
+
+        <div class="drop-zone" id="target-zone">
             </div>
+
+        <button id="unlock-btn" onclick="procediAlLivello1()">Apri il Primo Lucchetto</button>
     </div>
 </div>
 
 <script>
-    // Configurazione del gioco
-    const scenarios = [
-        {
-            text: "Un compagno di bottega ti chiede di coprire un suo errore su un pezzo meccanico. Cosa fai?",
-            choices: [
-                { text: "Lo aiuti a ripararlo (Relazioni+, Competenza+)", effects: { tech: 10, honesty: 0, rel: 15 } },
-                { text: "Dici la verità al mastro (Onestà+, Relazioni-)", effects: { tech: 0, honesty: 20, rel: -15 } }
-            ]
-        },
-        {
-            text: "Don Bosco ti invita a giocare dopo il lavoro, ma volevi finire un compito extra.",
-            choices: [
-                { text: "Vai in cortile (Relazioni++, Competenza-)", effects: { tech: -10, honesty: 5, rel: 20 } },
-                { text: "Rimani a studiare (Competenza++, Relazioni-)", effects: { tech: 20, honesty: 0, rel: -10 } }
-            ]
-        },
-        {
-            text: "Hai trovato un attrezzo costoso dimenticato da un cliente.",
-            choices: [
-                { text: "Lo restituisci subito (Onestà++)", effects: { tech: 0, honesty: 25, rel: 10 } },
-                { text: "Lo tieni per il tuo banco (Competenza+, Onestà--)", effects: { tech: 10, honesty: -30, rel: 0 } }
-            ]
-        }
-    ];
+    const cards = document.querySelectorAll('.word-card');
+    const targetZone = document.getElementById('target-zone');
+    const sourceZone = document.getElementById('source-words');
+    const fog = document.getElementById('fog-overlay');
+    const btn = document.getElementById('unlock-btn');
 
-    let stats = { tech: 50, honesty: 50, rel: 50 };
-    let currentStep = 0;
+    // Ordine corretto delle frasi
+    const correctOrder = ["1", "2", "3", "4"];
+    let currentSequence = [];
 
-    function updateDisplay() {
-        document.getElementById('stat-tech').innerText = stats.tech;
-        document.getElementById('stat-honesty').innerText = stats.honesty;
-        document.getElementById('stat-rel').innerText = stats.rel;
-
-        if (stats.tech <= 0 || stats.honesty <= 0 || stats.rel <= 0) {
-            endGame("Hai perso la strada. Ricorda: un buon artigiano ha bisogno di equilibrio tra testa, mani e cuore.");
-            return;
-        }
-
-        if (currentStep >= scenarios.length) {
-            endGame("Complimenti! Don Bosco ha firmato il tuo contratto. Sei un 'Buon Cristiano e Cittadino Onesto'!");
-            return;
-        }
-
-        const scene = scenarios[currentStep];
-        document.getElementById('scenario-text').innerText = scene.text;
-        const btnContainer = document.getElementById('choices');
-        btnContainer.innerHTML = '';
-
-        scene.choices.forEach(choice => {
-            const btn = document.createElement('button');
-            btn.innerText = choice.text;
-            btn.onclick = () => makeChoice(choice.effects);
-            btnContainer.appendChild(btn);
+    cards.forEach(card => {
+        card.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', card.id);
         });
+    });
+
+    targetZone.addEventListener('dragover', e => e.preventDefault());
+
+    targetZone.addEventListener('drop', e => {
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        const element = document.getElementById(id);
+        targetZone.appendChild(element);
+        checkSequence();
+    });
+
+    // Permette di riportare le parole indietro se si sbaglia
+    sourceZone.addEventListener('dragover', e => e.preventDefault());
+    sourceZone.addEventListener('drop', e => {
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        sourceZone.appendChild(document.getElementById(id));
+        checkSequence();
+    });
+
+    function checkSequence() {
+        const currentCards = Array.from(targetZone.children);
+        currentSequence = currentCards.map(c => c.dataset.order);
+
+        // Se l'ordine è corretto e sono tutte e 4
+        if (JSON.stringify(currentSequence) === JSON.stringify(correctOrder)) {
+            dissipaNebbia();
+        }
     }
 
-    function makeChoice(effects) {
-        stats.tech += effects.tech;
-        stats.honesty += effects.honesty;
-        stats.rel += effects.rel;
-        currentStep++;
-        updateDisplay();
+    function dissipaNebbia() {
+        fog.style.opacity = '0';
+        btn.style.display = 'inline-block';
+        document.querySelector('.istruzioni').innerHTML = "<strong>La visione è chiara.</strong> Il Codice ha reagito al tuo tocco. Il sentiero per i Becchi è ora visibile.";
     }
 
-    function endGame(message) {
-        document.getElementById('game-content').innerHTML = `
-            <h2 class="${stats.tech <= 0 || stats.honesty <= 0 || stats.rel <= 0 ? 'game-over' : ''}">${message}</h2>
-            <button onclick="location.reload()">Riprova l'avventura</button>
-        `;
+    function procediAlLivello1() {
+        alert("Transizione alla Prima Decade: La Nascita (1815-1835)...");
+        // Qui inseriremo il link alla pagina successiva o il caricamento dinamico del Livello 1
     }
-
-    // Inizio
-    updateDisplay();
 </script>
 
 </body>

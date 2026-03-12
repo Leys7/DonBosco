@@ -102,9 +102,9 @@
 
 <div id="game-container">
     <div class="stats-container">
-        <div class="stat-box">Competenza<span id="stat-tech" class="stat-value">0</span></div>
-        <div class="stat-box">Onestà<span id="stat-honesty" class="stat-value">0</span></div>
-        <div class="stat-box">Relazioni<span id="stat-rel" class="stat-value">0</span></div>
+        <div class="stat-box">Competenza<span id="stat-tech" class="stat-value">50</span></div>
+        <div class="stat-box">Onestà<span id="stat-honesty" class="stat-value">50</span></div>
+        <div class="stat-box">Relazioni<span id="stat-rel" class="stat-value">50</span></div>
     </div>
 
     <div id="game-content">
@@ -160,7 +160,7 @@
         }
     ];
 
-    let stats = { tech: 50, honesty: 50, rel: 50 };
+    let stats = { tech: 0, honesty: 0, rel: 0 };
     let currentStep = 0;
     const SOGLIA_MINIMA = 30; // Se una stat scende sotto 30, perdi.
 

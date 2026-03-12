@@ -165,3 +165,116 @@
         <button class="btn-success" id="unlock-btn">APRI IL PRIMO LUCCHETTO</button>
     </div>
 </div>
+<script>
+    // 1. Database dei Frammenti (4 corretti, 8 errati)
+    const allFragments = [
+        { id: "1", text: "Renditi umile," },
+        { id: "2", text: "forte e robusto:" },
+        { id: "3", text: "trasformerai i lupi" },
+        { id: "4", text: "in agnelli." },
+        { id: "x1", text: "Domina con la forza" },
+        { id: "x2", text: "Cerca la gloria umana" },
+        { id: "x3", text: "Punisci ogni errore" },
+        { id: "x4", text: "Accumula ricchezze" },
+        { id: "x5", text: "Fuggi dal dolore" },
+        { id: "x6", text: "Sii un lupo tra i lupi" },
+        { id: "x7", text: "Imponi il tuo volere" },
+        { id: "x8", text: "Ignora i più piccoli" }
+    ];
+
+    const pool = document.getElementById('pool');
+    const slots = document.querySelectorAll('.slot');
+    const statusMsg = document.getElementById('status-msg');
+    const unlockBtn = document.getElementById('unlock-btn');
+    
+    let currentGameState = [null, null, null, null];
+
+    // 2. Funzione per mescolare l'array (Algoritmo Fisher-Yates)
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // 3. Inizializzazione Gioco
+    function initGame() {
+        const shuffled = shuffle([...allFragments]);
+        shuffled.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'fragment';
+            div.draggable = true;
+            div.innerText = item.text;
+            div.id = 'frag-' + item.id;
+            div.dataset.value = item.id;
+            
+            div.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text/plain', e.target.id);
+            });
+            
+            pool.appendChild(div);
+        });
+    }
+
+    // 4. Gestione Drag & Drop
+    [pool, ...slots].forEach(zone => {
+        zone.addEventListener('dragover', e => e.preventDefault());
+
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            const fragId = e.dataTransfer.getData('text/plain');
+            const fragEl = document.getElementById(fragId);
+            
+            if (zone.classList.contains('slot')) {
+                const index = zone.dataset.index;
+                // Se lo slot è già occupato, non fare nulla o scambia (qui blocchiamo)
+                if (zone.querySelectorAll('.fragment').length === 0) {
+                    zone.appendChild(fragEl);
+                    currentGameState[index] = fragEl.dataset.value;
+                }
+            } else {
+                // Ritorno al pool
+                pool.appendChild(fragEl);
+                // Rimuovi dal tracciamento se era in uno slot
+                const oldIdx = currentGameState.indexOf(fragEl.dataset.value);
+                if (oldIdx !== -1) currentGameState[oldIdx] = null;
+            }
+            checkVictory();
+        });
+    });
+
+    // 5. Verifica della Soluzione
+    function checkVictory() {
+        const solution = ["1", "2", "3", "4"];
+        const isFull = currentGameState.every(val => val !== null);
+        
+        if (isFull) {
+            const isCorrect = JSON.stringify(currentGameState) === JSON.stringify(solution);
+            if (isCorrect) {
+                statusMsg.innerText = "IL CODICE È DECIFRATO. IL PRIMO LUCCHETTO SI SBRIBRIA.";
+                statusMsg.style.color = "#d4af37";
+                unlockBtn.style.display = "inline-block";
+            } else {
+                statusMsg.innerText = "L'ECO È DISTORTA. QUESTE PAROLE NON APPARTENGONO AL SOGNO.";
+                statusMsg.style.color = "#ff4444";
+                unlockBtn.style.display = "none";
+            }
+        } else {
+            statusMsg.innerText = "";
+            unlockBtn.style.display = "none";
+        }
+    }
+
+    // Avvio
+    initGame();
+
+    // Azione finale (per ora un segnaposto)
+    unlockBtn.addEventListener('click', () => {
+        alert("Hai sbloccato la Prima Decade! Preparati a viaggiare verso i Becchi (1815).");
+        // Qui caricheremo la pagina successiva: location.href = 'decade1.html';
+    });
+</script>
+
+</body>
+</html>

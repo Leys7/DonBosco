@@ -124,6 +124,13 @@
             ]
         },
         {
+            text: "Un compagno ha rotto un ingranaggio costoso per distrazione e ti prega di non dire nulla al mastro. Che fai?",
+            choices: [
+                { text: "Lo aiuti a ripararlo di nascosto facendo tardi", effects: { tech: 10, honesty: -5, rel: 10 } },
+                { text: "Lo convinci ad ammettere l'errore e ti offri di aiutarlo", effects: { tech: 5, honesty: 5, rel: 5 } }
+            ]
+        },
+        {
             text: "C'è un lavoro extra urgente, ma Don Bosco ha organizzato una sfida a 'lippa' in cortile.",
             choices: [
                 { text: "Finisci il lavoro perfettamente (Il dovere prima!)", effects: { tech: 10, honesty: 10, rel: -10 } },
@@ -229,7 +236,7 @@ document.getElementById('stat-rel').style.color = stats.rel < 30 ? "var(--danger
                 <p>Mani (Tech): ${stats.tech} | Cuore (Rel): ${stats.rel} | Onestà: ${stats.honesty}</p>
             </div>
             ${isWin ? 
-                `<button onclick="window.location.href='prossima_decade.html'">SBLOCCA DECADE SUCCESSIVA →</button>` : 
+                `<button onclick="window.location.href='prossima_decade.html'">HAI SBLOCCATO IL SECONDO LUCCHETTO →</button>` : 
                 `<button onclick="location.reload()">RICOMINCIA L'APPRENDISTATO</button>`}
         `;
     }

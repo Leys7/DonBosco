@@ -3,216 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IL CODICE DEL SOGNO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Pro:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
+    <title>Il Codice del Sogno - Prologo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #c5a059; --parchment: #f2e6d0; }
-        
-        body, html { 
-            margin: 0; padding: 0; 
-            background-color: #050505; 
-            color: var(--parchment); 
+        :root {
+            --gold: #d4af37;
+            --deep-red: #5d1a1a;
+            --parchment: #f2e6d0;
+            --ink: #2c1e1a;
+        }
+
+        body {
+            margin: 0;
+            background: #0a0a0a;
+            color: var(--parchment);
             font-family: 'Crimson Pro', serif;
-            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* SFONDO OTTIMIZZATO: POSIZIONATO PER NON COPRIRE IL VISO */
-        #hero-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            z-index: -2;
-            background-image: url('donbosco.jpg');
-            background-size: contain; 
-            background-position: center 5%; 
-            background-repeat: no-repeat;
-        }
-
-        /* OVERLAY PIU' MORBIDO PER FAR EMERGERE I TESTI */
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, 
-                rgba(0,0,0,0) 0%, 
-                rgba(0,0,0,0.2) 20%, 
-                rgba(5,5,5,0.85) 60%, 
-                #050505 100%);
-            z-index: -1;
-        }
-
-        .wrapper { 
-            max-width: 900px; 
-            margin: 0 auto; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
-        
-        .header { 
-            text-align: center; 
-            margin-top: 30px; 
-            margin-bottom: 420px; /* Spazio vitale per vedere il volto di Don Bosco */
-        }
-
-        h1 { 
-            font-family: 'Cinzel'; 
-            color: var(--gold); 
-            font-size: clamp(2rem, 8vw, 3.5rem); 
-            text-shadow: 0 0 20px black; 
-            margin: 0; 
-        }
-
-        /* BOX GIOCO CON CONTRASTO ELEVATO */
-        .game-box {
-            background: rgba(15, 15, 15, 0.95); 
-            border: 1px solid var(--gold);
-            padding: 35px; 
-            width: 100%; 
-            max-width: 800px;
-            box-sizing: border-box;
-            box-shadow: 0 0 50px black; 
-            text-align: center;
-            border-radius: 4px;
-        }
-
-        .pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 25px 0; }
-        
-        .fragment { 
-            background: var(--parchment); 
-            color: #111; 
-            padding: 10px 15px; 
-            cursor: grab; 
-            font-weight: bold; 
-            border: 1px solid var(--gold);
-            font-size: 0.95rem;
-            box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
-        }
-
-        .slots { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; 
-            margin: 30px 0; 
-            flex-wrap: wrap; 
-        }
-
-        .target { 
-            width: 170px; 
-            height: 60px; 
-            border: 1px dashed var(--gold); 
-            background: rgba(0,0,0,0.5); 
-            display: flex; 
-            align-items: center; 
+        /* Header con Don Bosco */
+        .header-vision {
+            width: 100%;
+            height: 450px;
+            background: linear-gradient(to bottom, transparent, #0a0a0a), 
+                        url('https://leys7.github.io/DonBosco/donbosco.jpg'); /* Segnaposto finché non carichi la gen */
+            background-size: cover;
+            background-position: center top;
+            display: flex;
+            align-items: flex-end;
             justify-content: center;
-            color: var(--gold);
-            font-size: 0.8rem;
+            padding-bottom: 50px;
         }
 
-        .btn-next {
-            display: none; 
-            background: var(--gold); 
-            color: black; 
-            padding: 18px 45px;
-            font-family: 'Cinzel'; 
-            font-weight: bold; 
-            border: none; 
-            cursor: pointer; 
+        .header-title {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            text-shadow: 0 0 20px black;
+        }
+
+        .header-title h1 { font-size: 3.5rem; color: var(--gold); margin: 0; }
+        .header-title p { font-size: 1.5rem; letter-spacing: 2px; }
+
+        /* Sezione Narrativa */
+        .content-wrapper {
+            max-width: 900px;
+            margin: -20px auto 50px;
+            padding: 40px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid #333;
+            box-shadow: 0 10px 50px rgba(0,0,0,1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .lore-drop {
+            border-left: 3px solid var(--gold);
+            padding-left: 25px;
+            margin: 40px 0;
+            background: rgba(212, 175, 55, 0.05);
+            padding: 20px;
+        }
+
+        /* Il Gioco dei 12 Frammenti */
+        .game-area {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .fragments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+        }
+
+        .fragment {
+            background: var(--parchment);
+            color: var(--ink);
+            padding: 15px;
+            cursor: grab;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 3px;
+            box-shadow: 4px 4px 0px var(--gold);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+        }
+
+        .fragment:hover { transform: scale(1.02); background: white; }
+
+        .drop-slots-container {
+            background: #1a1a1a;
+            padding: 30px;
+            border: 2px double var(--gold);
             margin-top: 20px;
-            font-size: 1.1rem;
         }
 
-        .instruction-text {
-            font-style: italic;
-            margin-bottom: 20px;
-            line-height: 1.6;
+        .slots-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            min-height: 80px;
         }
+
+        .slot {
+            width: 180px;
+            min-height: 60px;
+            border: 1px dashed rgba(212, 175, 55, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: var(--gold);
+            padding: 5px;
+        }
+
+        .btn-portal {
+            display: none;
+            margin-top: 40px;
+            padding: 20px 50px;
+            background: var(--gold);
+            color: #000;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.5s;
+        }
+
+        .btn-portal:hover { background: white; box-shadow: 0 0 30px var(--gold); }
     </style>
 </head>
 <body>
 
-<div id="hero-bg"></div>
-<div class="overlay"></div>
-
-<div class="wrapper">
-    <header class="header">
+<div class="header-vision">
+    <div class="header-title">
         <h1>IL CODICE DEL SOGNO</h1>
-        <p style="color: var(--gold); letter-spacing: 2px;">"Dalla mia vita alla vostra"</p>
-    </header>
-
-    <div class="game-box">
-        <h2 style="font-family: 'Cinzel'; color: var(--gold); margin-top: 0;">L'Eco del Sogno</h2>
-        <div class="instruction-text">
-            "Benvenuto, cercatore. Per procedere, ricomponi il messaggio che cambiò il mondo."<br>
-            <strong>Trascina i 4 frammenti del Sogno a nove anni negli slot corretti.</strong>
-        </div>
-        
-        <div class="pool" id="pool"></div>
-
-        <div class="slots">
-            <div class="target" data-id="1">SLOT I</div>
-            <div class="target" data-id="2">SLOT II</div>
-            <div class="target" data-id="3">SLOT III</div>
-            <div class="target" data-id="4">SLOT IV</div>
-        </div>
-
-        <div id="status" style="height: 30px; font-weight: bold; color: var(--gold);"></div>
-        <button class="btn-next" id="btn-next" onclick="window.location.href='run.html'">SBLOCCA DECADE I</button>
+        <p>Sulle Tracce di Giovanni</p>
     </div>
 </div>
 
+<div class="content-wrapper">
+    <section class="narrazione">
+        <p>Benvenuto, cercatore di storie. In qualità di tuo Architetto di Lore, ho analizzato i frammenti di vita contenuti nelle <em>"Memorie dell'Oratorio"</em> per tessere un'avventura che attraversa il tempo.</p>
+        
+        <p>Ti trovi dinanzi a un antico volume rilegato in pelle... Una voce antica ma stranamente familiare sussurra tra le righe: <strong>"Dalla mia vita alla vostra"</strong>.</p>
+        
+        <div class="lore-drop">
+            <h3>Lore Drop: Il Manoscritto del Futuro</h3>
+            <p>Hai scoperto il primo frammento di verità: la vita non è un susseguirsi casuale di eventi, ma un Cammino strutturato. Ogni "Decade" che sbloccherai rivelerà una parte del Codice di Don Bosco, un regolamento non scritto che trasforma dei semplici ragazzi in "buoni cristiani e onesti cittadini".</p>
+        </div>
+
+        <p>Il libro è sigillato da tre lucchetti dorati. Per aprire il primo e iniziare la <strong>Prima Decade (1815 – 1835)</strong>, devi superare la prova dell'Eco.</p>
+    </section>
+
+    <section class="game-area">
+        <h2>🎮 Mini-gioco: L'Eco del Sogno</h2>
+        <p>Trascina i 4 frammenti autentici del Sogno dei 9 anni nell'ordine corretto. Attento alle distorsioni della nebbia (frammenti errati).</p>
+        
+        <div class="fragments-grid" id="pool">
+            <div class="fragment" draggable="true" id="f1" data-id="1">Renditi umile,</div>
+            <div class="fragment" draggable="true" id="f2" data-id="2">forte e robusto:</div>
+            <div class="fragment" draggable="true" id="f3" data-id="3">trasformerai questi lupi</div>
+            <div class="fragment" draggable="true" id="f4" data-id="4">in agnelli.</div>
+            
+            <div class="fragment" draggable="true" id="fe1" data-id="x">Domina con la forza</div>
+            <div class="fragment" draggable="true" id="fe2" data-id="x">Cerca la gloria umana</div>
+            <div class="fragment" draggable="true" id="fe3" data-id="x">Punisci ogni errore</div>
+            <div class="fragment" draggable="true" id="fe4" data-id="x">Accumula tesori terreni</div>
+            <div class="fragment" draggable="true" id="fe5" data-id="x"> Fuggi dal dolore</div>
+            <div class="fragment" draggable="true" id="fe6" data-id="x">Resta nei tuoi confini</div>
+            <div class="fragment" draggable="true" id="fe7" data-id="x">Ignora il grido dei poveri</div>
+            <div class="fragment" draggable="true" id="fe8" data-id="x">Sii un lupo tra i lupi</div>
+        </div>
+
+        <div class="drop-slots-container">
+            <div class="slots-row" id="target-slots">
+                <div class="slot" data-index="0">I</div>
+                <div class="slot" data-index="1">II</div>
+                <div class="slot" data-index="2">III</div>
+                <div class="slot" data-index="3">IV</div>
+            </div>
+            <div id="feedback" style="margin-top:20px; font-weight:bold;"></div>
+            <button class="btn-portal" id="btn-next">APRI IL PRIMO LUCCHETTO</button>
+        </div>
+    </section>
+</div>
+
 <script>
-    // Database completo a 12 schede
-    const cardsData = [
-        { id: "1", t: "Renditi umile," }, { id: "2", t: "forte e robusto:" },
-        { id: "3", t: "trasformerai i lupi" }, { id: "4", t: "in agnelli." },
-        { id: "x", t: "Domina con timore" }, { id: "x", t: "Usa il potere" },
-        { id: "x", t: "Cerca la gloria" }, { id: "x", t: "Accumula ori" },
-        { id: "x", t: "Sii superiore" }, { id: "x", t: "Vinci per te" },
-        { id: "x", t: "Comanda i piccoli" }, { id: "x", t: "Punisci chi erra" }
-    ];
-
+    const fragments = document.querySelectorAll('.fragment');
+    const slots = document.querySelectorAll('.slot');
     const pool = document.getElementById('pool');
-    const status = document.getElementById('status');
+    const feedback = document.getElementById('feedback');
     const btnNext = document.getElementById('btn-next');
+    
+    let state = [null, null, null, null];
 
-    // Mischia e genera le 12 schede
-    cardsData.sort(() => Math.random() - 0.5).forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'fragment'; 
-        div.draggable = true; 
-        div.innerText = c.t;
-        div.dataset.id = c.id; 
-        div.id = 'f-' + Math.random().toString(36).substr(2, 9);
-        div.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
-        pool.appendChild(div);
+    fragments.forEach(f => {
+        f.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
     });
 
-    // Logica Drag & Drop
-    document.querySelectorAll('.target, .pool').forEach(zone => {
-        zone.addEventListener('dragover', e => e.preventDefault());
-        zone.addEventListener('drop', e => {
+    [pool, ...slots].forEach(area => {
+        area.addEventListener('dragover', e => e.preventDefault());
+        area.addEventListener('drop', e => {
             e.preventDefault();
             const id = e.dataTransfer.getData('text');
             const el = document.getElementById(id);
-            if (zone.classList.contains('target')) {
-                if (zone.children.length === 0) zone.appendChild(el);
+            
+            if (area.classList.contains('slot')) {
+                const index = area.dataset.index;
+                if (area.children.length === 0) {
+                    area.appendChild(el);
+                    state[index] = el.dataset.id;
+                }
             } else {
-                zone.appendChild(el);
+                pool.appendChild(el);
+                // Rimuovi dallo stato se era in uno slot
+                const oldIdx = state.indexOf(el.dataset.id);
+                if (oldIdx !== -1) state[oldIdx] = null;
             }
-            checkResult();
+            checkWin();
         });
     });
 
-    function checkResult() {
-        const slots = document.querySelectorAll('.target');
-        const currentIds = Array.from(slots).map(s => s.children[0]?.dataset.id);
+    function checkWin() {
+        const winCondition = ["1", "2", "3", "4"];
+        const isFull = state.every(s => s !== null);
         
-        if (JSON.stringify(currentIds) === JSON.stringify(["1", "2", "3", "4"])) {
-            status.innerText = "IL CODICE È CORRETTO";
-            btnNext.style.display = "inline-block";
+        if (isFull) {
+            if (JSON.stringify(state) === JSON.stringify(winCondition)) {
+                feedback.innerText = "IL CODICE È DECIFRATO. IL SENTIERO PER I BECCHI È APERTO.";
+                feedback.style.color = "#d4af37";
+                btnNext.style.display = "inline-block";
+            } else {
+                feedback.innerText = "L'ECO È DISTORTA. L'ORDINE NON È CORRETTO.";
+                feedback.style.color = "#ff4444";
+            }
         } else {
+            feedback.innerText = "";
             btnNext.style.display = "none";
-            status.innerText = currentIds.includes(undefined) ? "" : "L'ORDINE NON È ESATTO";
         }
     }
 </script>
+
 </body>
 </html>

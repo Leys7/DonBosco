@@ -3,282 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Il Codice del Sogno</title>
+    <title>IL CODICE DEL SOGNO</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Pro:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #c5a059;
-            --parchment: #f2e6d0;
-            --dark-bg: rgba(10, 10, 10, 0.95);
+        body, html { margin: 0; padding: 0; background-color: #000; color: #f2e6d0; font-family: 'Crimson Pro', serif; }
+        
+        /* Sfondo forzato */
+        #bg-live {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -2; object-fit: cover; object-position: center top;
         }
 
-        body, html {
-            margin: 0; padding: 0;
-            background-color: #050505;
-            color: var(--parchment);
-            font-family: 'Crimson Pro', serif;
-            overflow-x: hidden;
-        }
-
-        /* SFONDO FISSO TRAMITE DIV DEDICATO */
-        #bg-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -2;
-        }
-
-        #bg-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center top;
-        } <style>
-        :root {
-            --gold: #c5a059;
-            --parchment: #f2e6d0;
-            --dark-bg: rgba(10, 10, 10, 0.95);
-        }
-
-        body, html {
-            margin: 0; padding: 0;
-            background-color: #050505;
-            color: var(--parchment);
-            font-family: 'Crimson Pro', serif;
-        }
-
-        /* SFONDO FISSO CON URL ASSOLUTO PER FORZARE IL CARICAMENTO */
-        .background-fixed {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            /* Usiamo l'indirizzo che abbiamo visto funzionare nel tuo browser */
-            background-image: url('https://leys7.github.io/DonBosco/donbosco.jpg'); 
-            background-size: cover;
-            background-position: center top;
-            z-index: -2;
-        }
-
-        .overlay-scuro {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(to bottom, 
-                rgba(0,0,0,0.3) 0%, 
-                rgba(0,0,0,0.6) 50%, 
-                rgba(5,5,5,1) 95%);
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8) 80%);
             z-index: -1;
         }
 
-        .main-wrapper {
-            max-width: 850px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .header-title {
-            text-align: center;
-            margin-top: 50px;
-            margin-bottom: 450px; /* Spazio per il volto di Don Bosco */
-        }
-
-        h1 {
-            font-family: 'Cinzel', serif;
-            color: var(--gold);
-            font-size: clamp(2rem, 8vw, 3.8rem);
-            margin: 0;
-            text-shadow: 0 0 30px black;
-        }
-
-        .lore-card {
-            background: var(--dark-bg);
-            border: 1px solid var(--gold);
-            padding: clamp(20px, 5vw, 45px);
-            margin-bottom: 50px;
-            box-shadow: 0 0 50px rgba(0,0,0,1);
-            line-height: 1.8;
-            font-size: 1.2rem;
-            border-radius: 4px;
-        }
-
-        /* GIOCO DRAG & DROP */
-        .game-box {
-            background: rgba(5,5,5,0.98);
-            border: 2px solid var(--gold);
-            padding: 30px;
-            width: 100%;
-            box-sizing: border-box;
-            text-align: center;
-        }
-
-        .fragments-pool {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin: 25px 0;
-            min-height: 100px;
-            padding: 15px;
-            background: rgba(255,255,255,0.05);
-        }
-
-        .fragment {
-            background: var(--parchment);
-            color: #1a120b;
-            padding: 10px 15px;
-            cursor: grab;
-            font-weight: bold;
-            border-radius: 2px;
-            box-shadow: 3px 3px 0 var(--gold);
-        }
-
-        .slots-row {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 25px 0;
-            flex-wrap: wrap;
-        }
-
-        .slot {
-            width: 170px;
-            height: 60px;
-            border: 2px dashed var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.4);
-            color: var(--gold);
-            font-size: 0.8rem;
-        }
-
-        .btn-unlock {
-            display: none;
-            background: var(--gold);
-            color: black;
-            padding: 18px 45px;
-            font-family: 'Cinzel', serif;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: 0.3s;
-        }
-
-        .btn-unlock:hover { transform: scale(1.05); background: #e0bc7a; }
+        .wrapper { max-width: 800px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+        .header { margin-bottom: 450px; }
+        h1 { font-family: 'Cinzel'; color: #c5a059; font-size: 3rem; text-shadow: 2px 2px 10px #000; }
+        
+        .box { background: rgba(10, 10, 10, 0.9); border: 1px solid #c5a059; padding: 30px; margin-bottom: 30px; }
+        
+        /* Gioco */
+        .pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px 0; min-height: 80px; }
+        .item { background: #f2e6d0; color: #000; padding: 8px 12px; cursor: grab; font-weight: bold; border: 2px solid #c5a059; }
+        .slots { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+        .target { width: 150px; height: 50px; border: 2px dashed #c5a059; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); }
+        .btn { display: none; background: #c5a059; color: #000; padding: 15px 30px; font-family: 'Cinzel'; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <body>
-    <div id="bg-container">
-        <img src="https://leys7.github.io/DonBosco/donbosco.jpg" alt="Don Bosco Sfondo">
-    </div>
 
-    <div class="overlay-scuro"></div>
-   
-    <div class="background-fixed"></div>
-    <div class="overlay-scuro"></div>
+    <img id="bg-live" alt="Background">
+    <div class="overlay"></div>
 
-    <div class="main-wrapper">
-        <header class="header-title">
+    <div class="wrapper">
+        <div class="header">
             <h1>IL CODICE DEL SOGNO</h1>
-            <p style="letter-spacing: 3px; color: var(--gold);"><i>"Dalla mia vita alla vostra"</i></p>
-        </header>
+            <p><i>"Dalla mia vita alla vostra"</i></p>
+        </div>
 
-        <section class="lore-card">
-            <p>Benvenuto, cercatore di storie. Ti trovi dinanzi a un antico volume... sono le <strong>Memorie dell’Oratorio</strong>.</p>
-            <p>Il libro è sigillato. Per aprire il primo lucchetto e iniziare la <strong>Prima Decade (1815 – 1835)</strong>, devi ricomporre il messaggio del Sogno.</p>
-        </section>
-
-        <section class="game-box">
-            <h2 style="font-family: 'Cinzel'; color: var(--gold);">L'Eco del Sogno</h2>
-            <p>Trascina i 4 frammenti corretti negli slot del destino.</p>
-            
-            <div class="fragments-pool" id="pool"></div>
-
-            <div class="slots-row">
-                <div class="slot" data-index="0">FRAMMENTO I</div>
-                <div class="slot" data-index="1">FRAMMENTO II</div>
-                <div class="slot" data-index="2">FRAMMENTO III</div>
-                <div class="slot" data-index="3">FRAMMENTO IV</div>
+        <div class="box">
+            <p>Sblocca il primo sigillo trascinando i frammenti nell'ordine corretto.</p>
+            <div class="pool" id="pool"></div>
+            <div class="slots">
+                <div class="target" data-id="1"></div>
+                <div class="target" data-id="2"></div>
+                <div class="target" data-id="3"></div>
+                <div class="target" data-id="4"></div>
             </div>
-
-            <div id="msg" style="height: 30px; margin-bottom: 10px; font-weight: bold;"></div>
-            <button class="btn-unlock" id="btn-next">VARCA LA SOGLIA</button>
-        </section>
+            <div id="status"></div>
+            <button id="next" class="btn" onclick="window.location.href='run.html'">SBLOCCA DECADE 1</button>
+        </div>
     </div>
 
     <script>
-        const fragments = [
-            { id: "1", text: "Renditi umile," },
-            { id: "2", text: "forte e robusto:" },
-            { id: "3", text: "trasformerai i lupi" },
-            { id: "4", text: "in agnelli." },
-            { id: "x", text: "Domina con forza" },
-            { id: "x", text: "Usa il timore" },
-            { id: "x", text: "Cerca la gloria" },
-            { id: "x", text: "Sii il più grande" },
-            { id: "x", text: "Accumula oro" },
-            { id: "x", text: "Punisci i cattivi" }
+        // FORZATURA IMMAGINE: Aggiungiamo un timestamp per saltare la cache
+        const img = document.getElementById('bg-live');
+        img.src = "https://leys7.github.io/DonBosco/donbosco.jpg?t=" + new Date().getTime();
+
+        const data = [
+            { id: "1", t: "Renditi umile," }, { id: "2", t: "forte e robusto:" },
+            { id: "3", t: "trasformerai i lupi" }, { id: "4", t: "in agnelli." },
+            { id: "x", t: "Cerca il potere" }, { id: "x", t: "Usa la forza" },
+            { id: "x", t: "Sii orgoglioso" }, { id: "x", t: "Accumula beni" }
         ];
 
         const pool = document.getElementById('pool');
-        const slots = document.querySelectorAll('.slot');
-        const msg = document.getElementById('msg');
-        const btn = document.getElementById('btn-next');
-        let state = [null, null, null, null];
+        const state = [null, null, null, null];
 
-        // Mischia e crea
-        fragments.sort(() => Math.random() - 0.5).forEach(f => {
-            const div = document.createElement('div');
-            div.className = 'fragment';
-            div.draggable = true;
-            div.innerText = f.text;
-            div.dataset.id = f.id;
-            div.id = 'f-' + Math.random().toString(36).substr(2, 5);
-            div.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
-            pool.appendChild(div);
+        data.sort(() => Math.random() - 0.5).forEach(d => {
+            const el = document.createElement('div');
+            el.className = 'item'; el.draggable = true; el.innerText = d.t; el.id = 'd' + Math.random();
+            el.dataset.val = d.id;
+            el.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
+            pool.appendChild(el);
         });
 
-        // Logica Drop
-        [pool, ...slots].forEach(area => {
-            area.addEventListener('dragover', e => e.preventDefault());
-            area.addEventListener('drop', e => {
+        document.querySelectorAll('.target, .pool').forEach(zone => {
+            zone.addEventListener('dragover', e => e.preventDefault());
+            zone.addEventListener('drop', e => {
                 e.preventDefault();
                 const id = e.dataTransfer.getData('text');
                 const el = document.getElementById(id);
-                
-                if (area.classList.contains('slot')) {
-                    const idx = area.dataset.index;
-                    if (area.children.length === 0) {
-                        area.appendChild(el);
-                        state[idx] = el.dataset.id;
-                    }
-                } else {
-                    pool.appendChild(el);
-                    const oldIdx = state.indexOf(el.dataset.id);
-                    if (oldIdx !== -1) state[oldIdx] = null;
-                }
-                
-                if (JSON.stringify(state) === JSON.stringify(["1", "2", "3", "4"])) {
-                    msg.innerText = "IL CODICE È CORRETTO";
-                    msg.style.color = "var(--gold)";
-                    btn.style.display = "inline-block";
-                } else {
-                    msg.innerText = state.includes(null) ? "" : "LE PAROLE SONO DISTORTE...";
-                    msg.style.color = "red";
-                    btn.style.display = "none";
-                }
+                zone.appendChild(el);
+                check();
             });
         });
 
-        // Collegamento alla Decade 1 (run.html)
-        btn.onclick = () => { window.location.href = 'run.html'; };
+        function check() {
+            const results = Array.from(document.querySelectorAll('.target')).map(t => t.children[0]?.dataset.val);
+            if (JSON.stringify(results) === JSON.stringify(["1", "2", "3", "4"])) {
+                document.getElementById('next').style.display = 'inline-block';
+                document.getElementById('status').innerText = "SIGILLO APERTO!";
+            }
+        }
     </script>
 </body>
 </html>
-
-

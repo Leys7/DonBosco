@@ -165,23 +165,19 @@
     const SOGLIA_MINIMA = 30; // Se una stat scende sotto 30, perdi.
 
     function updateDisplay() {
+        // Aggiorniamo i valori numerici a video
         document.getElementById('stat-tech').innerText = stats.tech;
         document.getElementById('stat-honesty').innerText = stats.honesty;
         document.getElementById('stat-rel').innerText = stats.rel;
         document.getElementById('progress').innerText = `Scenari affrontati: ${currentStep} di ${scenarios.length}`;
 
-        // Controllo Sconfitta immediata
-        if (stats.tech < SOGLIA_MINIMA || stats.honesty < SOGLIA_MINIMA || stats.rel < SOGLIA_MINIMA) {
-            endGame("Hai perso l'equilibrio. Il mastro ti ha congedato: un buon artigiano deve curare spirito e materia ugualmente.", false);
-            return;
-        }
-
-        // Controllo Vittoria
+        // Se abbiamo finito tutti gli scenari, facciamo il controllo finale
         if (currentStep >= scenarios.length) {
-            endGame("Hai superato la prova! Don Bosco sorride: 'Sei il tipo di giovane che cercavo'. Il contratto è firmato.", true);
+            checkFinalScore();
             return;
         }
 
+        // Altrimenti mostriamo lo scenario corrente
         const scene = scenarios[currentStep];
         document.getElementById('scenario-text').innerText = scene.text;
         const btnContainer = document.getElementById('choices');
@@ -199,6 +195,25 @@
             };
             btnContainer.appendChild(btn);
         });
+    }
+
+    function checkFinalScore() {
+        // Controllo: tutte le statistiche devono essere almeno 30
+        const isBalanced = stats.tech >= SOGLIA_MINIMA && 
+                           stats.honesty >= SOGLIA_MINIMA && 
+                           stats.rel >= SOGLIA_MINIMA;
+
+        if (isBalanced) {
+            endGame("Hai superato la prova! Don Bosco sorride: 'Sei il tipo di giovane che cercavo'. Il contratto è firmato.", true);
+        } else {
+            // Messaggio personalizzato per far capire cosa è mancato
+            let motivo = "Il mastro scuote il capo. ";
+            if (stats.tech < SOGLIA_MINIMA) motivo += "Ti manca la perizia tecnica. ";
+            if (stats.honesty < SOGLIA_MINIMA) motivo += "La tua integrità è vacillante. ";
+            if (stats.rel < SOGLIA_MINIMA) motivo += "Non hai curato i rapporti con i compagni. ";
+            
+            endGame(motivo + "Un buon artigiano deve equilibrare testa, mani e cuore.", false);
+        }
     }
 
     function endGame(message, isWin) {

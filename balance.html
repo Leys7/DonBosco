@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Workshop Challenge - CNOS-FAP</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #ffc107;
+            --danger: #dc3545;
+            --success: #28a745;
+            --dark: #212529;
+            --light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 90%;
+            max-width: 500px;
+            background: #fff;
+            color: #333;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+            background: var(--light);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .stat-box { font-size: 0.8rem; font-weight: bold; }
+        .stat-value { 
+            display: block; 
+            font-size: 1.2rem; 
+            color: var(--primary);
+        }
+
+        #scenario-text {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            min-height: 80px;
+            line-height: 1.4;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+        }
+
+        button:hover { background: #004494; transform: scale(1.02); }
+        button:active { transform: scale(0.98); }
+
+        /* Effetto per il Game Over */
+        .game-over { color: var(--danger); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div class="stats-container">
+        <div class="stat-box">COMPETENZA<span id="stat-tech" class="stat-value">50</span></div>
+        <div class="stat-box">ONESTÀ<span id="stat-honesty" class="stat-value">50</span></div>
+        <div class="stat-box">RELAZIONI<span id="stat-rel" class="stat-value">50</span></div>
+    </div>
+
+    <div id="game-content">
+        <p id="scenario-text">Caricamento avventura...</p>
+        <div class="btn-container" id="choices">
+            </div>
+    </div>
+</div>
+
+<script>
+    // Configurazione del gioco
+    const scenarios = [
+        {
+            text: "Un compagno di bottega ti chiede di coprire un suo errore su un pezzo meccanico. Cosa fai?",
+            choices: [
+                { text: "Lo aiuti a ripararlo (Relazioni+, Competenza+)", effects: { tech: 10, honesty: 0, rel: 15 } },
+                { text: "Dici la verità al mastro (Onestà+, Relazioni-)", effects: { tech: 0, honesty: 20, rel: -15 } }
+            ]
+        },
+        {
+            text: "Don Bosco ti invita a giocare dopo il lavoro, ma volevi finire un compito extra.",
+            choices: [
+                { text: "Vai in cortile (Relazioni++, Competenza-)", effects: { tech: -10, honesty: 5, rel: 20 } },
+                { text: "Rimani a studiare (Competenza++, Relazioni-)", effects: { tech: 20, honesty: 0, rel: -10 } }
+            ]
+        },
+        {
+            text: "Hai trovato un attrezzo costoso dimenticato da un cliente.",
+            choices: [
+                { text: "Lo restituisci subito (Onestà++)", effects: { tech: 0, honesty: 25, rel: 10 } },
+                { text: "Lo tieni per il tuo banco (Competenza+, Onestà--)", effects: { tech: 10, honesty: -30, rel: 0 } }
+            ]
+        }
+    ];
+
+    let stats = { tech: 50, honesty: 50, rel: 50 };
+    let currentStep = 0;
+
+    function updateDisplay() {
+        document.getElementById('stat-tech').innerText = stats.tech;
+        document.getElementById('stat-honesty').innerText = stats.honesty;
+        document.getElementById('stat-rel').innerText = stats.rel;
+
+        if (stats.tech <= 0 || stats.honesty <= 0 || stats.rel <= 0) {
+            endGame("Hai perso la strada. Ricorda: un buon artigiano ha bisogno di equilibrio tra testa, mani e cuore.");
+            return;
+        }
+
+        if (currentStep >= scenarios.length) {
+            endGame("Complimenti! Don Bosco ha firmato il tuo contratto. Sei un 'Buon Cristiano e Cittadino Onesto'!");
+            return;
+        }
+
+        const scene = scenarios[currentStep];
+        document.getElementById('scenario-text').innerText = scene.text;
+        const btnContainer = document.getElementById('choices');
+        btnContainer.innerHTML = '';
+
+        scene.choices.forEach(choice => {
+            const btn = document.createElement('button');
+            btn.innerText = choice.text;
+            btn.onclick = () => makeChoice(choice.effects);
+            btnContainer.appendChild(btn);
+        });
+    }
+
+    function makeChoice(effects) {
+        stats.tech += effects.tech;
+        stats.honesty += effects.honesty;
+        stats.rel += effects.rel;
+        currentStep++;
+        updateDisplay();
+    }
+
+    function endGame(message) {
+        document.getElementById('game-content').innerHTML = `
+            <h2 class="${stats.tech <= 0 || stats.honesty <= 0 || stats.rel <= 0 ? 'game-over' : ''}">${message}</h2>
+            <button onclick="location.reload()">Riprova l'avventura</button>
+        `;
+    }
+
+    // Inizio
+    updateDisplay();
+</script>
+
+</body>
+
+</html>

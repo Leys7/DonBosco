@@ -5,34 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IL CODICE DEL SOGNO</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Pro:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
-    <style>
-        body, html { margin: 0; padding: 0; background-color: #000; color: #f2e6d0; font-family: 'Crimson Pro', serif; overflow-x: hidden; }
-        
-        /* Contenitore Sfondo */
-        #hero-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -2; background-size: cover; background-position: center top;
-            background-color: #000;
-            transition: opacity 1s ease-in;
-        }
+<style>
+    :root {
+        --gold: #c5a059;
+        --parchment: #f2e6d0;
+    }
 
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 70%, #050505 100%);
-            z-index: -1;
-        }
+    body, html {
+        margin: 0;
+        padding: 0;
+        background-color: #050505;
+        color: var(--parchment);
+        font-family: 'Crimson Pro', serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
 
-        .wrapper { max-width: 800px; margin: 0 auto; padding: 40px 20px; text-align: center; position: relative; }
-        .header { margin-top: 60px; margin-bottom: 400px; }
-        h1 { font-family: 'Cinzel'; color: #c5a059; font-size: 3.5rem; text-shadow: 0 0 20px #000; margin: 0; }
-        
-        .box { background: rgba(15, 15, 15, 0.95); border: 1px solid #c5a059; padding: 40px; border-radius: 4px; box-shadow: 0 0 40px #000; }
-        .pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 30px 0; min-height: 80px; }
-        .item { background: #f2e6d0; color: #1a120b; padding: 10px 15px; cursor: grab; font-weight: bold; border: 1px solid #c5a059; box-shadow: 3px 3px 0 rgba(197, 160, 89, 0.5); }
-        .slots { display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap; }
-        .target { width: 170px; height: 60px; border: 1px dashed rgba(197,160,89,0.4); display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); font-size: 0.7rem; color: #c5a059; }
-        .btn { display: none; background: #c5a059; color: #000; padding: 18px 40px; font-family: 'Cinzel'; border: none; cursor: pointer; font-weight: bold; font-size: 1.1rem; margin-top: 20px; }
-    </style>
+    /* SFONDO FISSO CHE NON SI MUOVE */
+    #hero-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: -2;
+        /* Questo assicura che l'immagine copra tutto senza distorcersi */
+        background-image: url('https://leys7.github.io/DonBosco/donbosco.jpg');
+        background-size: cover; 
+        background-position: center 20%; /* Inquadra meglio il volto */
+        background-repeat: no-repeat;
+    }
+
+    /* SFUMATURA PER RENDERE IL TESTO LEGGIBILE */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* Crea un gradiente che scurisce verso il basso dove c'è il gioco */
+        background: linear-gradient(to bottom, 
+            rgba(0,0,0,0.2) 0%, 
+            rgba(0,0,0,0.5) 40%, 
+            rgba(5,5,5,0.9) 80%, 
+            #050505 100%);
+        z-index: -1;
+    }
+
+    .wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .header {
+        margin-top: 5vh;
+        margin-bottom: 40vh; /* Spazio per vedere Don Bosco */
+        text-align: center;
+    }
+
+    h1 {
+        font-family: 'Cinzel', serif;
+        color: var(--gold);
+        font-size: clamp(2rem, 10vw, 3.5rem);
+        text-shadow: 0 0 20px black;
+        margin: 0;
+    }
+
+    /* CONTENITORE DEL GIOCO */
+    .box {
+        background: rgba(15, 15, 15, 0.95);
+        border: 1px solid var(--gold);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 50px black;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 50px;
+    }
+    
+    /* Regole per le schede (Fragments) */
+    .pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px 0; }
+    .item { 
+        background: var(--parchment); 
+        color: #1a120b; 
+        padding: 10px; 
+        cursor: grab; 
+        font-weight: bold; 
+        border: 1px solid var(--gold);
+    }
+    .slots { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .target { 
+        width: 160px; height: 50px; 
+        border: 1px dashed var(--gold); 
+        background: rgba(255,255,255,0.05);
+    }
+</style>
 </head>
 <body>
 
@@ -114,3 +186,4 @@
     </script>
 </body>
 </html>
+

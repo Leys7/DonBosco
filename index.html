@@ -3,153 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Il Codice del Sogno</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <title>Il Codice del Sogno - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Pro:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
     <style>
-        /* Variabili di colore per coerenza stilistica */
         :root {
             --gold: #c5a059;
-            --cream: #f4eeda;
-            --dark-overlay: rgba(0, 0, 0, 0.7);
+            --parchment: #f2e6d0;
+            --dark-bg: rgba(10, 10, 10, 0.85);
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Cormorant Garamond', serif;
-            color: var(--cream);
-            overflow-x: hidden; /* Previene lo scroll orizzontale */
+            margin: 0; padding: 0;
+            background-color: #050505;
+            color: var(--parchment);
+            font-family: 'Crimson Pro', serif;
         }
 
-        /* --- IMMAGINE DI SFONDO (Foto 1) --- */
-        .scena-mistica {
-            /* Imposta l'immagine generata come sfondo centrale, fisso e coprente */
-            background-image: url('image_4.png'); /* Sostituisci con l'URL reale */
-            background-attachment: fixed; /* L'immagine resta ferma mentre scorri */
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            
-            height: 100%;
-            width: 100%;
+        /* SFONDO FISSO (Come foto 2) */
+        .background-fixed {
             position: fixed;
-            z-index: -1; /* Mette lo sfondo dietro i contenuti */
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            /* SOSTITUISCI 'tuo-file.jpg' con il nome dell'immagine di Don Bosco che hai salvato */
+            background-image: url('https://lh3.googleusercontent.com/d/1v58y1O4wW-i2yO8YyK9oWfH-N9O6Gf-w'); 
+            background-size: cover;
+            background-position: center top;
+            z-index: -1;
         }
 
-        /* Overlay scuro per migliorare la leggibilità dei testi */
-        .scena-mistica::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--dark-overlay);
+        .overlay-scuro {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 20%, black 90%);
+            z-index: -1;
         }
 
-        /* --- LAYOUT CONTENUTI (come Foto 2) --- */
-        .portale-narrativo {
-            position: relative;
-            z-index: 10; /* Sopra lo sfondo */
+        /* CONTENITORE PRINCIPALE */
+        .main-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 60px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 100px 20px; /* Spazio in alto per non coprire il volto subito */
         }
 
-        /* Testata principale */
-        .titolo-portale {
+        .header-title {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 300px; /* Spazio per far vedere il volto di Don Bosco */
         }
 
-        .titolo-portale h1 {
-            font-family: 'Cinzel', serif; /* Font per titoli epici */
+        h1 {
+            font-family: 'Cinzel', serif;
             color: var(--gold);
             font-size: 3.5rem;
-            letter-spacing: 5px;
             margin: 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 0 20px black;
         }
 
-        .titolo-portale p {
-            font-style: italic;
-            font-size: 1.3rem;
-            margin-top: 10px;
-        }
-
-        /* Blocchi di testo narrativo (scatole scure e bordate) */
-        .lore-box {
-            max-width: 800px;
-            background-color: rgba(20, 20, 20, 0.9); /* Quasi nero opaco */
-            padding: 40px;
+        .lore-card {
+            background: var(--dark-bg);
             border: 1px solid var(--gold);
-            margin-bottom: 50px;
-            border-radius: 2px;
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.2);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             line-height: 1.8;
             font-size: 1.2rem;
         }
 
-        .lore-box p { margin-bottom: 20px; }
-        .lore-box strong { color: var(--gold); }
-
-        /* Area Mini-gioco (Segnaposto) */
-        .sezione-gioco {
-            text-align: center;
-            max-width: 800px;
+        /* STILE GIOCO */
+        .game-box {
+            background: rgba(0,0,0,0.9);
+            border: 2px solid var(--gold);
+            padding: 30px;
             width: 100%;
+            text-align: center;
         }
 
-        .titolo-gioco {
-            font-family: 'Cinzel', serif;
-            color: var(--gold);
-            font-size: 2rem;
-            margin-bottom: 30px;
+        .fragments-pool {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px 0;
+            min-height: 120px;
+            padding: 15px;
+            border: 1px solid #333;
         }
 
-        .segnaposto-area-drop {
-            height: 150px;
-            border: 2px dashed var(--gold);
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.05);
+        .fragment {
+            background: var(--parchment);
+            color: #1a120b;
+            padding: 10px 15px;
+            cursor: grab;
+            font-weight: bold;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            box-shadow: 3px 3px 0 var(--gold);
+        }
+
+        .slots-row {
             display: flex;
             justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .slot {
+            width: 160px;
+            height: 60px;
+            border: 1px dashed var(--gold);
+            display: flex;
             align-items: center;
-            color: rgba(197, 160, 89, 0.6);
-            font-style: italic;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: var(--gold);
+        }
+
+        .btn-unlock {
+            display: none;
+            background: var(--gold);
+            color: black;
+            padding: 15px 40px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="scena-mistica"></div>
+<div class="background-fixed"></div>
+<div class="overlay-scuro"></div>
 
-    <main class="portale-narrativo">
+<div class="main-wrapper">
+    <header class="header-title">
+        <h1>IL CODICE DEL SOGNO</h1>
+        <p><i>"Dalla mia vita alla vostra"</i></p>
+    </header>
 
-        <header class="titolo-portale">
-            <h1>IL CODICE DEL SOGNO</h1>
-            <p>"Dalla mia vita alla vostra"</p>
-        </header>
+    <div class="lore-card">
+        <p>Benvenuto, cercatore di storie. Ti trovi dinanzi a un antico volume rilegato in pelle... Una voce antica ma stranamente familiare sussurra tra le righe: <strong>"Dalla mia vita alla vostra"</strong>.</p>
+        <p>Hai scoperto il primo frammento di verità: la vita non è un susseguirsi casuale di eventi, ma un Cammino strutturato. Ogni "Decade" che sbloccherai rivelerà una parte del <strong>Codice di Don Bosco</strong>.</p>
+    </div>
 
-        <section class="lore-box">
-            <p>Benvenuto, cercatore di storie. Ti trovi dinanzi a un antico volume rilegato in pelle, le cui pagine sembrano vibrare di una luce propria. Non è un libro comune: sono le <strong>Memorie dell’Oratorio</strong>.</p>
+    <div class="game-box">
+        <h2 style="font-family: 'Cinzel'; color: var(--gold);">L'Eco del Sogno</h2>
+        <p>Trascina i 4 frammenti autentici nell'ordine corretto per aprire il primo lucchetto.</p>
+        
+        <div class="fragments-pool" id="pool"></div>
+
+        <div class="slots-row">
+            <div class="slot" data-index="0" id="s0">I</div>
+            <div class="slot" data-index="1" id="s1">II</div>
+            <div class="slot" data-index="2" id="s2">III</div>
+            <div class="slot" data-index="3" id="s3">IV</div>
+        </div>
+
+        <div id="msg" style="height: 20px; font-weight: bold;"></div>
+        <button class="btn-unlock" id="btn" onclick="alert('Accesso alla Prima Decade!')">VARCA LA SOGLIA</button>
+    </div>
+</div>
+<script>
+    const data = [
+        { id: "1", text: "Renditi umile," },
+        { id: "2", text: "forte e robusto:" },
+        { id: "3", text: "trasformerai i lupi" },
+        { id: "4", text: "in agnelli." },
+        { id: "x", text: "Domina con timore" },
+        { id: "x", text: "Cerca il potere" },
+        { id: "x", text: "Usa la forza" },
+        { id: "x", text: "Sii superiore" },
+        { id: "x", text: "Accumula oro" },
+        { id: "x", text: "Vinci ogni sfida" },
+        { id: "x", text: "Non ascoltare" },
+        { id: "x", text: "Colpisci forte" }
+    ];
+
+    const pool = document.getElementById('pool');
+    const slots = document.querySelectorAll('.slot');
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('btn');
+    let state = [null, null, null, null];
+
+    // Mescola e crea frammenti
+    data.sort(() => Math.random() - 0.5).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'fragment';
+        div.draggable = true;
+        div.innerText = item.text;
+        div.dataset.id = item.id;
+        div.id = 'f' + Math.random();
+        div.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
+        pool.appendChild(div);
+    });
+
+    // Gestione Drop
+    [pool, ...slots].forEach(area => {
+        area.addEventListener('dragover', e => e.preventDefault());
+        area.addEventListener('drop', e => {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text');
+            const el = document.getElementById(id);
             
-            <p>Il mondo intorno a te sbiadisce. Le strade asfaltate diventano sentieri polverosi; i rumori della città si trasformano nel belare di greggi e nel vociare di ragazzi che corrono in un cortile. Sei stato scelto per decifrare il segreto di una vita spesa per gli altri...</p>
-        </section>
+            if (area.classList.contains('slot')) {
+                const idx = area.dataset.index;
+                if (area.children.length === 0) {
+                    area.appendChild(el);
+                    state[idx] = el.dataset.id;
+                }
+            } else {
+                pool.appendChild(el);
+                const oldIdx = state.indexOf(el.dataset.id);
+                if (oldIdx !== -1) state[oldIdx] = null;
+            }
+            check();
+        });
+    });
 
-        <section class="lore-box">
-            <h3>Lore Drop: Il Manoscritto del Futuro</h3>
-            <p>Hai scoperto il primo frammento di verità: la vita non è un susseguirsi casuale di eventi, ma un Cammino strutturato. Ogni "Decade" che sbloccherai rivelerà una parte del <strong>Codice di Don Bosco</strong>...</p>
-        </section>
-
-        <section class="sezione-gioco">
-            <h2 class="titolo-gioco">🎮 L'Eco del Sogno</h2>
-            <p style="margin-bottom: 20px;">Trascina i frammenti del primo grande Sogno a nove anni per dissipare la nebbia...</p>
-            <div class="segnaposto-area-drop">
-                [Area Mini-gioco interattivo da integrare qui]
-            </div>
-        </section>
-
-    </main>
-
+    function check() {
+        if (JSON.stringify(state) === JSON.stringify(["1", "2", "3", "4"])) {
+            msg.innerText = "IL SIGILLO SI SPEZZA!";
+            msg.style.color = "var(--gold)";
+            btn.style.display = "inline-block";
+        } else {
+            msg.innerText = state.includes(null) ? "" : "LE PAROLE NON RISUONANO...";
+            msg.style.color = "red";
+            btn.style.display = "none";
+        }
+    }
+</script>
 </body>
 </html>

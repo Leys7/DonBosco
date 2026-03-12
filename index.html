@@ -6,80 +6,85 @@
     <title>IL CODICE DEL SOGNO</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Pro:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; background-color: #000; color: #f2e6d0; font-family: 'Crimson Pro', serif; }
+        body, html { margin: 0; padding: 0; background-color: #000; color: #f2e6d0; font-family: 'Crimson Pro', serif; overflow-x: hidden; }
         
-        /* Sfondo forzato */
-        #bg-live {
+        /* Contenitore Sfondo */
+        #hero-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -2; object-fit: cover; object-position: center top;
+            z-index: -2; background-size: cover; background-position: center top;
+            background-color: #000;
+            transition: opacity 1s ease-in;
         }
 
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8) 80%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 70%, #050505 100%);
             z-index: -1;
         }
 
-        .wrapper { max-width: 800px; margin: 0 auto; padding: 40px 20px; text-align: center; }
-        .header { margin-bottom: 450px; }
-        h1 { font-family: 'Cinzel'; color: #c5a059; font-size: 3rem; text-shadow: 2px 2px 10px #000; }
+        .wrapper { max-width: 800px; margin: 0 auto; padding: 40px 20px; text-align: center; position: relative; }
+        .header { margin-top: 60px; margin-bottom: 400px; }
+        h1 { font-family: 'Cinzel'; color: #c5a059; font-size: 3.5rem; text-shadow: 0 0 20px #000; margin: 0; }
         
-        .box { background: rgba(10, 10, 10, 0.9); border: 1px solid #c5a059; padding: 30px; margin-bottom: 30px; }
-        
-        /* Gioco */
-        .pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px 0; min-height: 80px; }
-        .item { background: #f2e6d0; color: #000; padding: 8px 12px; cursor: grab; font-weight: bold; border: 2px solid #c5a059; }
-        .slots { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
-        .target { width: 150px; height: 50px; border: 2px dashed #c5a059; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); }
-        .btn { display: none; background: #c5a059; color: #000; padding: 15px 30px; font-family: 'Cinzel'; border: none; cursor: pointer; font-weight: bold; }
+        .box { background: rgba(15, 15, 15, 0.95); border: 1px solid #c5a059; padding: 40px; border-radius: 4px; box-shadow: 0 0 40px #000; }
+        .pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 30px 0; min-height: 80px; }
+        .item { background: #f2e6d0; color: #1a120b; padding: 10px 15px; cursor: grab; font-weight: bold; border: 1px solid #c5a059; box-shadow: 3px 3px 0 rgba(197, 160, 89, 0.5); }
+        .slots { display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap; }
+        .target { width: 170px; height: 60px; border: 1px dashed rgba(197,160,89,0.4); display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); font-size: 0.7rem; color: #c5a059; }
+        .btn { display: none; background: #c5a059; color: #000; padding: 18px 40px; font-family: 'Cinzel'; border: none; cursor: pointer; font-weight: bold; font-size: 1.1rem; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <img id="bg-live" alt="Background">
+    <div id="hero-bg"></div>
     <div class="overlay"></div>
 
     <div class="wrapper">
         <div class="header">
             <h1>IL CODICE DEL SOGNO</h1>
-            <p><i>"Dalla mia vita alla vostra"</i></p>
+            <p style="color:#c5a059; letter-spacing: 2px;"><i>"Dalla mia vita alla vostra"</i></p>
         </div>
 
         <div class="box">
-            <p>Sblocca il primo sigillo trascinando i frammenti nell'ordine corretto.</p>
+            <h2 style="font-family:'Cinzel'; color:#c5a059;">L'Eco del Sogno</h2>
+            <p>Trascina i frammenti del <i>Sogno a nove anni</i> per sbloccare la Decade I.</p>
             <div class="pool" id="pool"></div>
             <div class="slots">
-                <div class="target" data-id="1"></div>
-                <div class="target" data-id="2"></div>
-                <div class="target" data-id="3"></div>
-                <div class="target" data-id="4"></div>
+                <div class="target" data-idx="1">SLOT I</div>
+                <div class="target" data-idx="2">SLOT II</div>
+                <div class="target" data-idx="3">SLOT III</div>
+                <div class="target" data-idx="4">SLOT IV</div>
             </div>
-            <div id="status"></div>
-            <button id="next" class="btn" onclick="window.location.href='run.html'">SBLOCCA DECADE 1</button>
+            <div id="status" style="height:25px; margin:10px 0;"></div>
+            <button id="next" class="btn" onclick="window.location.href='run.html'">VARCA LA SOGLIA</button>
         </div>
     </div>
 
     <script>
-        // FORZATURA IMMAGINE: Aggiungiamo un timestamp per saltare la cache
-        const img = document.getElementById('bg-live');
-        img.src = "https://leys7.github.io/DonBosco/donbosco.jpg?t=" + new Date().getTime();
+        // FORZATURA IMMAGINE VIA JS
+        window.onload = function() {
+            const bg = document.getElementById('hero-bg');
+            // Usiamo il link che hai confermato funzionare nel browser
+            const imgUrl = "https://leys7.github.io/DonBosco/donbosco.jpg";
+            bg.style.backgroundImage = "url('" + imgUrl + "')";
+        };
 
-        const data = [
+        const fragments = [
             { id: "1", t: "Renditi umile," }, { id: "2", t: "forte e robusto:" },
             { id: "3", t: "trasformerai i lupi" }, { id: "4", t: "in agnelli." },
-            { id: "x", t: "Cerca il potere" }, { id: "x", t: "Usa la forza" },
-            { id: "x", t: "Sii orgoglioso" }, { id: "x", t: "Accumula beni" }
+            { id: "x", t: "Cerca la fama" }, { id: "x", t: "Usa l'autorità" },
+            { id: "x", t: "Sii il padrone" }, { id: "x", t: "Accumula ori" }
         ];
 
         const pool = document.getElementById('pool');
         const state = [null, null, null, null];
 
-        data.sort(() => Math.random() - 0.5).forEach(d => {
-            const el = document.createElement('div');
-            el.className = 'item'; el.draggable = true; el.innerText = d.t; el.id = 'd' + Math.random();
-            el.dataset.val = d.id;
-            el.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
-            pool.appendChild(el);
+        fragments.sort(() => Math.random() - 0.5).forEach(f => {
+            const div = document.createElement('div');
+            div.className = 'item'; div.draggable = true; div.innerText = f.t; div.id = 'f' + Math.random().toString(36).substr(2, 5);
+            div.dataset.val = f.id;
+            div.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
+            pool.appendChild(div);
         });
 
         document.querySelectorAll('.target, .pool').forEach(zone => {
@@ -94,10 +99,16 @@
         });
 
         function check() {
-            const results = Array.from(document.querySelectorAll('.target')).map(t => t.children[0]?.dataset.val);
-            if (JSON.stringify(results) === JSON.stringify(["1", "2", "3", "4"])) {
+            const slots = document.querySelectorAll('.target');
+            const current = Array.from(slots).map(s => s.children[0]?.dataset.val);
+            if (JSON.stringify(current) === JSON.stringify(["1", "2", "3", "4"])) {
                 document.getElementById('next').style.display = 'inline-block';
-                document.getElementById('status').innerText = "SIGILLO APERTO!";
+                document.getElementById('status').innerText = "IL PRIMO LUCCHETTO SI È APERTO";
+                document.getElementById('status').style.color = "#c5a059";
+            } else {
+                document.getElementById('next').style.display = 'none';
+                document.getElementById('status').innerText = current.includes(undefined) ? "" : "ORDINE ERRATO";
+                document.getElementById('status').style.color = "red";
             }
         }
     </script>

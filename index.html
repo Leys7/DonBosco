@@ -143,7 +143,7 @@
             <p>La vita non è un susseguirsi casuale di eventi, ma un Cammino strutturato. Ogni "Decade" che sbloccherai rivelerà una parte del <strong>Codice di Don Bosco</strong>, un regolamento non scritto che trasforma dei semplici ragazzi in "buoni cristiani e onesti cittadini".</p>
         </div>
 
-        <p>Il libro è sigillato da tre lucchetti dorati. Per aprire il primo e iniziare la Prima Decade (1815 – 1835), Dovrai dimostrare di avere occhi capaci di vedere lontano, separando ciò che è passeggero dai sogni che hanno il potere di cambiare il mondo.</p>
+        <p>Il libro è sigillato da un lucchetto dorato. Per aprirlo e iniziare la Prima Decade (1815 – 1835), Dovrai dimostrare di avere occhi capaci di vedere lontano, separando ciò che è passeggero dai sogni che hanno il potere di cambiare il mondo.</p>
     </div>
 
     <div class="game-section">
@@ -251,7 +251,7 @@
         if (isFull) {
             const isCorrect = JSON.stringify(currentGameState) === JSON.stringify(solution);
             if (isCorrect) {
-                statusMsg.innerText = "IL CODICE È DECIFRATO. HAI SBLOCCATO IL PRIMO LUCCHETTO.";
+                statusMsg.innerText = "IL CODICE È DECIFRATO. HAI SBLOCCATO IL LUCCHETTO.";
                 statusMsg.style.color = "#d4af37";
                 unlockBtn.style.display = "inline-block";
                 // Opzionale: cambia il testo del pulsante al momento dello sblocco
@@ -286,6 +286,7 @@
 
 </body>
 </html>
+
 
 
 

@@ -7,244 +7,245 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #c5a059;
-            --deep-red: #4a0404;
-            --parchment: #e8d5b5;
-            --ink: #1a120b;
+            --gold: #d4af37;
+            --deep-red: #5d1a1a;
+            --parchment: #f2e6d0;
+            --ink: #2c1e1a;
         }
 
         body {
             margin: 0;
-            background: #050505;
+            background: #0a0a0a;
             color: var(--parchment);
             font-family: 'Crimson Pro', serif;
             overflow-x: hidden;
         }
 
-        /* Sfondo con parallasse e nebbia animata */
-        .hero-section {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.9)), 
-                        url('https://images.unsplash.com/photo-1519791883288-dc8bd696e667?q=80&w=2070'); /* Immagine libro antico */
+        /* Header con Don Bosco */
+        .header-vision {
+            width: 100%;
+            height: 450px;
+            background: linear-gradient(to bottom, transparent, #0a0a0a), 
+                        url('https://images.unsplash.com/photo-1533073526757-2c8ca1df9f1c?q=80&w=2070'); /* Segnaposto finché non carichi la gen */
             background-size: cover;
-            background-position: center;
+            background-position: center top;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 50px;
+        }
+
+        .header-title {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            text-shadow: 0 0 20px black;
+        }
+
+        .header-title h1 { font-size: 3.5rem; color: var(--gold); margin: 0; }
+        .header-title p { font-size: 1.5rem; letter-spacing: 2px; }
+
+        /* Sezione Narrativa */
+        .content-wrapper {
+            max-width: 900px;
+            margin: -20px auto 50px;
+            padding: 40px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid #333;
+            box-shadow: 0 10px 50px rgba(0,0,0,1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .lore-drop {
+            border-left: 3px solid var(--gold);
+            padding-left: 25px;
+            margin: 40px 0;
+            background: rgba(212, 175, 55, 0.05);
             padding: 20px;
+        }
+
+        /* Il Gioco dei 12 Frammenti */
+        .game-area {
+            margin-top: 60px;
             text-align: center;
         }
 
-        .narrativa-box {
-            max-width: 800px;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 40px;
-            border: 1px solid var(--gold);
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.2);
-            border-radius: 2px;
-            margin-bottom: 50px;
-        }
-
-        h1 {
-            font-family: 'Cinzel', serif;
-            color: var(--gold);
-            font-size: 2.5rem;
-            letter-spacing: 3px;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px black;
-        }
-
-        .lore-text {
-            line-height: 1.8;
-            font-size: 1.2rem;
-            font-style: italic;
-        }
-
-        /* Area Mini-Gioco */
-        .game-container {
-            width: 100%;
-            max-width: 900px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .fragments-pool {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+        .fragments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 15px;
+            margin: 30px 0;
             padding: 20px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
         }
 
         .fragment {
             background: var(--parchment);
             color: var(--ink);
-            padding: 12px 24px;
+            padding: 15px;
             cursor: grab;
-            border-radius: 50px 20px 50px 20px; /* Forma irregolare "foglio strappato" */
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid transparent;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 3px;
+            box-shadow: 4px 4px 0px var(--gold);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
         }
 
-        .fragment:hover {
-            transform: translateY(-5px) rotate(2deg);
-            background: white;
-            box-shadow: 0 0 15px var(--gold);
+        .fragment:hover { transform: scale(1.02); background: white; }
+
+        .drop-slots-container {
+            background: #1a1a1a;
+            padding: 30px;
+            border: 2px double var(--gold);
+            margin-top: 20px;
         }
 
-        .drop-zone-container {
-            border-top: 1px solid var(--gold);
-            padding-top: 30px;
-        }
-
-        .drop-slots {
+        .slots-row {
             display: flex;
             justify-content: center;
             gap: 15px;
-            min-height: 70px;
             flex-wrap: wrap;
-            background: rgba(197, 160, 89, 0.05);
-            padding: 20px;
-            border-radius: 10px;
+            min-height: 80px;
         }
 
         .slot {
             width: 180px;
-            min-height: 50px;
-            border-bottom: 2px solid var(--gold);
+            min-height: 60px;
+            border: 1px dashed rgba(212, 175, 55, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            color: rgba(197, 160, 89, 0.5);
-        }
-
-        /* Stato di Errore o Successo */
-        .feedback {
-            margin-top: 20px;
-            font-weight: bold;
-            height: 24px;
-            transition: color 0.3s;
+            font-size: 0.8rem;
+            color: var(--gold);
+            padding: 5px;
         }
 
         .btn-portal {
             display: none;
-            margin-top: 30px;
-            padding: 15px 40px;
+            margin-top: 40px;
+            padding: 20px 50px;
             background: var(--gold);
-            color: var(--ink);
+            color: #000;
             font-family: 'Cinzel', serif;
             font-weight: bold;
-            text-decoration: none;
-            border-radius: 3px;
-            transition: 0.3s;
-            cursor: pointer;
             border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.5s;
         }
 
-        .btn-portal:hover {
-            background: white;
-            box-shadow: 0 0 20px var(--gold);
-        }
+        .btn-portal:hover { background: white; box-shadow: 0 0 30px var(--gold); }
     </style>
 </head>
 <body>
 
-<section class="hero-section">
-    <div class="narrativa-box">
-        <h1>Il Codice del Sogno</h1>
-        <div class="lore-text">
-            <p>Benvenuto, cercatore di storie. Ti trovi dinanzi a un antico volume rilegato in pelle... Le strade asfaltate diventano sentieri polverosi.</p>
-            <p><strong>La Missione:</strong> Il libro è sigillato. Per aprire il primo lucchetto e iniziare la <strong>Prima Decade</strong>, devi riordinare l'Eco del Sogno. Attento: i falsi ricordi cercheranno di ingannarti.</p>
-        </div>
+<div class="header-vision">
+    <div class="header-title">
+        <h1>IL CODICE DEL SOGNO</h1>
+        <p>Sulle Tracce di Giovanni</p>
     </div>
+</div>
 
-    <div class="game-container">
-        <div class="fragments-pool" id="pool">
-            <div class="fragment" draggable="true" id="f-1" data-val="1">Renditi umile,</div>
-            <div class="fragment" draggable="true" id="f-wrong1" data-val="x">Con la forza dei soldati</div>
-            <div class="fragment" draggable="true" id="f-2" data-val="2">forte e robusto:</div>
-            <div class="fragment" draggable="true" id="f-3" data-val="3">trasformerai questi lupi</div>
-            <div class="fragment" draggable="true" id="f-wrong2" data-val="y">distruggi i tuoi nemici</div>
-            <div class="fragment" draggable="true" id="f-4" data-val="4">in agnelli.</div>
+<div class="content-wrapper">
+    <section class="narrazione">
+        <p>Benvenuto, cercatore di storie. In qualità di tuo Architetto di Lore, ho analizzato i frammenti di vita contenuti nelle <em>"Memorie dell'Oratorio"</em> per tessere un'avventura che attraversa il tempo.</p>
+        
+        <p>Ti trovi dinanzi a un antico volume rilegato in pelle... Una voce antica ma stranamente familiare sussurra tra le righe: <strong>"Dalla mia vita alla vostra"</strong>.</p>
+        
+        <div class="lore-drop">
+            <h3>Lore Drop: Il Manoscritto del Futuro</h3>
+            <p>Hai scoperto il primo frammento di verità: la vita non è un susseguirsi casuale di eventi, ma un Cammino strutturato. Ogni "Decade" che sbloccherai rivelerà una parte del Codice di Don Bosco, un regolamento non scritto che trasforma dei semplici ragazzi in "buoni cristiani e onesti cittadini".</p>
         </div>
 
-        <div class="drop-zone-container">
-            <div class="drop-slots" id="slots">
-                <div class="slot" id="s1">Frammento I</div>
-                <div class="slot" id="s2">Frammento II</div>
-                <div class="slot" id="s3">Frammento III</div>
-                <div class="slot" id="s4">Frammento IV</div>
+        <p>Il libro è sigillato da tre lucchetti dorati. Per aprire il primo e iniziare la <strong>Prima Decade (1815 – 1835)</strong>, devi superare la prova dell'Eco.</p>
+    </section>
+
+    <section class="game-area">
+        <h2>🎮 Mini-gioco: L'Eco del Sogno</h2>
+        <p>Trascina i 4 frammenti autentici del Sogno dei 9 anni nell'ordine corretto. Attento alle distorsioni della nebbia (frammenti errati).</p>
+        
+        <div class="fragments-grid" id="pool">
+            <div class="fragment" draggable="true" id="f1" data-id="1">Renditi umile,</div>
+            <div class="fragment" draggable="true" id="f2" data-id="2">forte e robusto:</div>
+            <div class="fragment" draggable="true" id="f3" data-id="3">trasformerai questi lupi</div>
+            <div class="fragment" draggable="true" id="f4" data-id="4">in agnelli.</div>
+            
+            <div class="fragment" draggable="true" id="fe1" data-id="x">Domina con la forza</div>
+            <div class="fragment" draggable="true" id="fe2" data-id="x">Cerca la gloria umana</div>
+            <div class="fragment" draggable="true" id="fe3" data-id="x">Punisci ogni errore</div>
+            <div class="fragment" draggable="true" id="fe4" data-id="x">Accumula tesori terreni</div>
+            <div class="fragment" draggable="true" id="fe5" data-id="x"> Fuggi dal dolore</div>
+            <div class="fragment" draggable="true" id="fe6" data-id="x">Resta nei tuoi confini</div>
+            <div class="fragment" draggable="true" id="fe7" data-id="x">Ignora il grido dei poveri</div>
+            <div class="fragment" draggable="true" id="fe8" data-id="x">Sii un lupo tra i lupi</div>
+        </div>
+
+        <div class="drop-slots-container">
+            <div class="slots-row" id="target-slots">
+                <div class="slot" data-index="0">I</div>
+                <div class="slot" data-index="1">II</div>
+                <div class="slot" data-index="2">III</div>
+                <div class="slot" data-index="3">IV</div>
             </div>
-            <div id="game-feedback" class="feedback"></div>
-            <button class="btn-portal" id="btn-next" onclick="location.href='decade1.html'">Varca la Soglia</button>
+            <div id="feedback" style="margin-top:20px; font-weight:bold;"></div>
+            <button class="btn-portal" id="btn-next">APRI IL PRIMO LUCCHETTO</button>
         </div>
-    </div>
-</section>
+    </section>
+</div>
 
 <script>
     const fragments = document.querySelectorAll('.fragment');
     const slots = document.querySelectorAll('.slot');
-    const feedback = document.getElementById('game-feedback');
+    const pool = document.getElementById('pool');
+    const feedback = document.getElementById('feedback');
     const btnNext = document.getElementById('btn-next');
     
-    let currentOrder = [null, null, null, null];
+    let state = [null, null, null, null];
 
-    fragments.forEach(frag => {
-        frag.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', e.target.id);
-        });
+    fragments.forEach(f => {
+        f.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
     });
 
-    slots.forEach((slot, index) => {
-        slot.addEventListener('dragover', (e) => e.preventDefault());
-        
-        slot.addEventListener('drop', (e) => {
+    [pool, ...slots].forEach(area => {
+        area.addEventListener('dragover', e => e.preventDefault());
+        area.addEventListener('drop', e => {
             e.preventDefault();
-            const id = e.dataTransfer.getData('text/plain');
-            const element = document.getElementById(id);
+            const id = e.dataTransfer.getData('text');
+            const el = document.getElementById(id);
             
-            // Se lo slot è vuoto o contiene già un elemento, gestiamo lo scambio
-            if (slot.children.length === 0) {
-                slot.innerHTML = ''; // Rimuovi testo segnaposto
-                slot.appendChild(element);
-                currentOrder[index] = element.getAttribute('data-val');
-                checkResult();
+            if (area.classList.contains('slot')) {
+                const index = area.dataset.index;
+                if (area.children.length === 0) {
+                    area.appendChild(el);
+                    state[index] = el.dataset.id;
+                }
+            } else {
+                pool.appendChild(el);
+                // Rimuovi dallo stato se era in uno slot
+                const oldIdx = state.indexOf(el.dataset.id);
+                if (oldIdx !== -1) state[oldIdx] = null;
             }
+            checkWin();
         });
     });
 
-    // Permette di rimettere i pezzi nel pool se sbagliati
-    document.getElementById('pool').addEventListener('dragover', (e) => e.preventDefault());
-    document.getElementById('pool').addEventListener('drop', (e) => {
-        e.preventDefault();
-        const id = e.dataTransfer.getData('text/plain');
-        const element = document.getElementById(id);
-        document.getElementById('pool').appendChild(element);
-        
-        // Pulisci l'array dell'ordine
-        const oldIndex = currentOrder.indexOf(element.getAttribute('data-val'));
-        if (oldIndex !== -1) currentOrder[oldIndex] = null;
-        checkResult();
-    });
-
-    function checkResult() {
-        const winningSequence = ["1", "2", "3", "4"];
-        const isFull = currentOrder.every(val => val !== null);
+    function checkWin() {
+        const winCondition = ["1", "2", "3", "4"];
+        const isFull = state.every(s => s !== null);
         
         if (isFull) {
-            if (JSON.stringify(currentOrder) === JSON.stringify(winningSequence)) {
-                feedback.innerText = "Il Codice è corretto. Il sigillo si spezza.";
-                feedback.style.color = "#00ff00";
+            if (JSON.stringify(state) === JSON.stringify(winCondition)) {
+                feedback.innerText = "IL CODICE È DECIFRATO. IL SENTIERO PER I BECCHI È APERTO.";
+                feedback.style.color = "#d4af37";
                 btnNext.style.display = "inline-block";
             } else {
-                feedback.innerText = "Le parole risuonano false. Riprova, cercatore.";
+                feedback.innerText = "L'ECO È DISTORTA. L'ORDINE NON È CORRETTO.";
                 feedback.style.color = "#ff4444";
-                btnNext.style.display = "none";
             }
         } else {
             feedback.innerText = "";

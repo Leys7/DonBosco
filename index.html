@@ -251,11 +251,11 @@
         if (isFull) {
             const isCorrect = JSON.stringify(currentGameState) === JSON.stringify(solution);
             if (isCorrect) {
-                statusMsg.innerText = "IL CODICE È DECIFRATO. IL PRIMO LUCCHETTO SI SBRIBRIA.";
+                statusMsg.innerText = "IL CODICE È DECIFRATO. HAI SBLOCCATO IL PRIMO LUCCHETTO .";
                 statusMsg.style.color = "#d4af37";
                 unlockBtn.style.display = "inline-block";
             } else {
-                statusMsg.innerText = "L'ECO È DISTORTA. QUESTE PAROLE NON APPARTENGONO AL SOGNO.";
+                statusMsg.innerText = "L'ECO È DISTORTO. QUESTE PAROLE NON APPARTENGONO AL SOGNO.";
                 statusMsg.style.color = "#ff4444";
                 unlockBtn.style.display = "none";
             }
@@ -269,15 +269,16 @@
     initGame();
 
     // Azione finale (per ora un segnaposto)
-    unlockBtn.addEventListener('click', () => {
-        alert("Hai sbloccato la Prima Decade! Preparati a viaggiare verso i Becchi (1815).");
-        // Qui caricheremo la pagina successiva: location.href = 'decade1.html';
-    });
-    btn.onclick = () => location.href = 'decade1.html';
+    unlockBtn.addEventListener('click', () => btn.onclick = () => {
+    // Portiamo l'utente alla prima missione (Becchi/Vocazione)
+    window.location.href = 'run.html'; 
+};
+   
 </script>
 
 </body>
 </html>
+
 
 
 

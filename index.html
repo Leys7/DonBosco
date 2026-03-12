@@ -17,6 +17,34 @@
             background-color: #050505;
             color: var(--parchment);
             font-family: 'Crimson Pro', serif;
+            overflow-x: hidden;
+        }
+
+        /* SFONDO FISSO TRAMITE DIV DEDICATO */
+        #bg-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -2;
+        }
+
+        #bg-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        } <style>
+        :root {
+            --gold: #c5a059;
+            --parchment: #f2e6d0;
+            --dark-bg: rgba(10, 10, 10, 0.95);
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            background-color: #050505;
+            color: var(--parchment);
+            font-family: 'Crimson Pro', serif;
         }
 
         /* SFONDO FISSO CON URL ASSOLUTO PER FORZARE IL CARICAMENTO */
@@ -144,6 +172,27 @@
     </style>
 </head>
 <body>
+    <body>
+    <div id="bg-container">
+        <img src="https://leys7.github.io/DonBosco/donbosco.jpg" alt="Don Bosco Sfondo">
+    </div>
+
+    <div class="overlay-scuro"></div>
+    ```
+
+---
+
+### Perché ora sono 10 schede?
+Nello script precedente ho rimosso le varianti "inutili" per rendere il gioco più rapido da testare. Se vuoi tornare a 12, basta aggiungere due elementi all'array `fragments` nello script:
+* `{ id: "x", text: "Ascolta solo te stesso" },`
+* `{ id: "x", text: "Prendi ciò che vuoi" },`
+
+### Come testare se funziona davvero
+1. Fai il **Commit** su GitHub.
+2. Aspetta che il pallino nelle "Actions" diventi verde (significa che GitHub ha finito di pubblicare).
+3. Invece di fare refresh sulla solita pagina, apri una **Finestra in Incognito** (CTRL+SHIFT+N).
+
+**Se l'immagine appare, il gioco è finalmente pronto.** Vuoi che prepariamo il codice per la sfida successiva in `run.html` (il cammino sulla corda)?
 
     <div class="background-fixed"></div>
     <div class="overlay-scuro"></div>
@@ -246,3 +295,4 @@
     </script>
 </body>
 </html>
+

@@ -134,7 +134,7 @@
             text: "Un cliente facoltoso ti offreuna mancia 'segreta' per passare avanti agli altri ordini.",
             choices: [
                 { text: "Rifiuti con cortesia (Onestà non ha prezzo)", effects: { tech: 0, honesty: 25, rel: 5 } },
-                { text: "Accetti (In fondo sono soldi per la tua famiglia)", effects: { tech: 0, honesty: -30, rel: -5 } }
+                { text: "Accetti (In fondo sono soldi per la tua famiglia)", effects: { tech: 5, honesty: -30, rel: -5 } }
             ]
         },
         {
@@ -147,7 +147,7 @@
         {
             text: "Un nuovo apprendista è in difficoltà e rallenta la linea. Tutti lo prendono in giro.",
             choices: [
-                { text: "Ti fermi a spiegargli i segreti del mestiere", effects: { tech: 10, honesty: 5, rel: 20 } },
+                { text: "Ti fermi a spiegargli i segreti del mestiere", effects: { tech: 20, honesty: 5, rel: 20 } },
                 { text: "Lavori il doppio per compensare senza parlare", effects: { tech: 15, honesty: 0, rel: -5 } }
             ]
         },
@@ -182,6 +182,10 @@
         document.getElementById('scenario-text').innerText = scene.text;
         const btnContainer = document.getElementById('choices');
         btnContainer.innerHTML = '';
+        // Aggiungi questo dentro updateDisplay dopo aver aggiornato gli innerText
+document.getElementById('stat-tech').style.color = stats.tech < 30 ? "var(--danger)" : "var(--primary)";
+document.getElementById('stat-honesty').style.color = stats.honesty < 30 ? "var(--danger)" : "var(--primary)";
+document.getElementById('stat-rel').style.color = stats.rel < 30 ? "var(--danger)" : "var(--primary)";
 
         scene.choices.forEach(choice => {
             const btn = document.createElement('button');

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Ritardi e Ingressi - CNOS-FAP</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* Animazioni personalizzate per l'effetto stile NotebookLM */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .node-card {
+            transition: all 0.3s ease;
+        }
+        .node-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <header class="bg-white shadow-sm border-b border-slate-200 py-4 px-6">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-red-600 text-white font-bold p-2 rounded-lg text-sm tracking-wider">
+                    SALESIANI
+                </div>
+                <h1 class="text-lg font-semibold text-slate-700 hidden sm:block">CNOS-FAP ETS</h1>
+            </div>
+            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200 font-medium">
+                Protocollo Ingressi & Ritardi
+            </span>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 py-12 flex-grow w-full flex flex-col justify-center">
+        
+        <div id="flow-container" class="space-y-6 relative">
+            </div>
+
+        <div class="text-center mt-12">
+            <button id="reset-btn" class="hidden mx-auto bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18" />
+                </svg>
+                <span>Ricomincia da capo</span>
+            </button>
+        </div>
+    </main>
+
+    <footer class="text-center py-6 text-xs text-slate-400 border-t border-slate-200 bg-white">
+        Mappa Mentale Interattiva - Sviluppata in Vanilla JS
+    </footer>
+
+    <script>
+        // Definizione della struttura dati del diagramma (Grafo ad albero)
+        const flowData = {
+            start: {
+                question: "L'allievo è arrivato entro le ore 8:00?",
+                type: "choice",
+                options: [
+                    { text: "SÌ", next: "ok" },
+                    { text: "NO", next: "ritardo_5min" }
+                ]
+            },
+            ok: {
+                question: "Ingresso regolare.",
+                type: "end",
+                status: "success",
+                desc: "L'allievo può entrare regolarmente in classe."
+            },
+            ritardo_5min: {
+                question: "Il ritardo è entro i primi 5 minuti (8:05)?",
+                type: "choice",
+                options: [
+                    { text: "SÌ", next: "assenza" },
+                    { text: "NO", next: "fascia_5_15" }
+                ]
+            },
+            assenza: {
+                question: "L'allievo risulta ASSENTE.",
+                type: "end",
+                status: "danger",
+                desc: "Viene registrata l'assenza per la prima ora."
+            },
+            fascia_5_15: {
+                question: "Il ritardo è compreso tra i 5 e i 15 minuti?",
+                type: "choice",
+                options: [
+                    { text: "SÌ (Segnale di ritardo)", next: "segnale_ritardo_opzioni" },
+                    { text: "NO (Oltre i 15 min / No colpa)", next: "segnale_ritardo_generico" }
+                ]
+            },
+            // Ramo SÌ della fascia 5-15
+            segnale_ritardo_opzioni: {
+                question: "Il ritardo è giustificato?",
+                type: "choice",
+                options: [
+                    { text: "NO Giustificato", next: "punizione_3volte" },
+                    { text: "Giustificato", next: "punizione_6volte" }
+                ]
+            },
+            punizione_3volte: {
+                question: "Esito: 3 Volte Non Giustificato",
+                type: "end",
+                status: "warning",
+                desc: "Scattano i provvedimenti e le punizioni previste dal regolamento."
+            },
+            punizione_6volte: {
+                question: "Esito: Dopo 6 Volte",
+                type: "end",
+                status: "danger",
+                desc: "Punizione grave: SOSPENSIONE."
+            },
+            // Ramo NO della fascia 5-15
+            segnale_ritardo_generico: {
+                question: "L'allievo presenta la giustificazione immediata?",
+                type: "choice",
+                options: [
+                    { text: "Giustificato", next: "entra_classe" },
+                    { text: "NO Giustificato", next: "attende_9" }
+                ]
+            },
+            entra_classe: {
+                question: "Ingresso Consentito",
+                type: "end",
+                status: "success",
+                desc: "L'allievo entra direttamente in classe."
+            },
+            attende_9: {
+                question: "Ingresso alla seconda ora",
+                type: "end",
+                status: "warning",
+                desc: "L'allievo NON entra in classe. Attende in istituto fino alle ore 9:00."
+            }
+        };
+
+        const container = document.getElementById('flow-container');
+        const resetBtn = document.getElementById('reset-btn');
+        let currentHistory = []; // Traccia i nodi visitati per poterli renderizzare in sequenza
+
+        // Funzione per avviare o resettare il flusso
+        function initFlow() {
+            container.innerHTML = '';
+            currentHistory = ['start'];
+            resetBtn.classList.add('hidden');
+            renderTree();
+        }
+
+        // Funzione ricorsiva/sequenziale per renderizzare la storia dei nodi
+        function renderTree() {
+            container.innerHTML = '';
+            
+            currentHistory.forEach((nodeKey, index) => {
+                const node = flowData[nodeKey];
+                const isLast = index === currentHistory.length - 1;
+                
+                // Creazione del blocco card del nodo
+                const card = document.createElement('div');
+                card.className = `node-card bg-white border border-slate-200 rounded-xl p-6 shadow-sm fade-in relative`;
+                
+                // Gestione dei colori in base al tipo di conclusione
+                let badgeHTML = '';
+                if (node.type === 'end') {
+                    if (node.status === 'success
